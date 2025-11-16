@@ -4,14 +4,77 @@
     "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj": {
+    "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Application\\MiniLibrary.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj",
-        "projectName": "MiniLibrary.Infrastructure",
-        "projectPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj",
+        "projectUniqueName": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Application\\MiniLibrary.Application.csproj",
+        "projectName": "MiniLibrary.Application",
+        "projectPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Application\\MiniLibrary.Application.csproj",
         "packagesPath": "C:\\Users\\naimu\\.nuget\\packages\\",
-        "outputPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\obj\\",
+        "outputPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\naimu\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Domain\\MiniLibrary.Domain.csproj": {
+                "projectPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Domain\\MiniLibrary.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Users\\naimu\\.dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Domain\\MiniLibrary.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Domain\\MiniLibrary.Domain.csproj",
+        "projectName": "MiniLibrary.Domain",
+        "projectPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Domain\\MiniLibrary.Domain.csproj",
+        "packagesPath": "C:\\Users\\naimu\\.nuget\\packages\\",
+        "outputPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\naimu\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,6 +106,87 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Users\\naimu\\.dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj",
+        "projectName": "MiniLibrary.Infrastructure",
+        "projectPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\MiniLibrary.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\naimu\\.nuget\\packages\\",
+        "outputPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\naimu\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Application\\MiniLibrary.Application.csproj": {
+                "projectPath": "D:\\Extra Projects\\Media-Soft\\mini-library-management-system\\MiniLibrary\\MiniLibrary.Application\\MiniLibrary.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.11, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
