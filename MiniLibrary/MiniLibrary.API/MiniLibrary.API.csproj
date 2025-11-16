@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+      <Folder Include="Middleware\" />
+    </ItemGroup>
+
 </Project>
