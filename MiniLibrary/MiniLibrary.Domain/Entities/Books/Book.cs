@@ -1,6 +1,6 @@
-namespace MiniLibrary.Domain.Entities.Books;
-
 using MiniLibrary.Domain.Common;
+
+namespace MiniLibrary.Domain.Entities.Books;
 
 public class Book : BaseEntity
 {
