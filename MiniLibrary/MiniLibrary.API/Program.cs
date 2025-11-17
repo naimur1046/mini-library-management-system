@@ -1,74 +1,61 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-
-namespace MiniLibrary.API;
-using MiniLibrary.Application;
-using MiniLibrary.Infrastructure;
+using System.Reflection;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using MiniLibrary.API.Extensions;
 using Serilog;
 
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-try
+// Configure Serilog
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+// Add services to the container
+builder.Services.AddApiServices(builder.Configuration);
+    // TODO: Add Application layer services here when needed
+    // TODO: Add Infrastructure layer services here when needed
+
+WebApplication app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
 {
-    var builder = WebApplication.CreateBuilder(args);
+    app.UseSwaggerWithUi();
 
-    // Configure Serilog
-    Log.Logger = new LoggerConfiguration()
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.FromLogContext()
-        .Enrich.WithProperty("Application", "MiniLibrary")
-        .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-        .WriteTo.Console()
-        .WriteTo.File(
-            path: "logs/minilibrary-.txt",
-            rollingInterval: RollingInterval.Day,
-            retainedFileCountLimit: 30)
-        .CreateLogger();
-
-    builder.Host.UseSerilog();
-
-    Log.Information("Starting Mini Library Management System");
-
-    // Add services to the container
-    builder.Services.AddApiServices(builder.Configuration);
-    builder.Services.AddApplication();
-    builder.Services.AddInfrastructure(builder.Configuration);
-
-    var app = builder.Build();
-
-    // Configure the HTTP request pipeline
-    if (app.Environment.IsDevelopment())
-    {
-        app.MapOpenApi();
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mini Library API V1");
-            c.RoutePrefix = string.Empty; // Swagger at root
-        });
-    }
-
-    // Custom exception handling middleware
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-    app.UseHttpsRedirection();
-
-    app.UseCors("AllowAll");
-
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    // Map all endpoints
-    app.MapEndpoints();
-
-    Log.Information("Application started successfully");
-
-    app.Run();
+    // Apply migrations in development
+    // app.ApplyMigrations();
 }
-catch (Exception ex)
+
+// Health checks endpoint
+app.MapHealthChecks("health", new HealthCheckOptions
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
-}
-finally
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+// Request context logging for correlation
+app.UseRequestContextLogging();
+
+// Serilog request logging
+app.UseSerilogRequestLogging();
+
+// Global exception handler
+app.UseExceptionHandler();
+
+app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+// Map all endpoints
+app.MapEndpoints();
+
+await app.RunAsync();
+
+// REMARK: Required for functional and integration tests to work.
+namespace MiniLibrary.API
 {
-    Log.CloseAndFlush();
+    public partial class Program;
 }
