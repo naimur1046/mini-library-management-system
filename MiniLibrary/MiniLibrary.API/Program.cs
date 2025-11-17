@@ -1,6 +1,4 @@
 using System.Reflection;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using MiniLibrary.API.Extensions;
 using Serilog;
 
@@ -25,12 +23,6 @@ try
         // Apply migrations in development
         // app.ApplyMigrations();
     }
-
-    // Health checks endpoint
-    app.MapHealthChecks("health", new HealthCheckOptions
-    {
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    });
 
     // Request context logging for correlation
     app.UseRequestContextLogging();

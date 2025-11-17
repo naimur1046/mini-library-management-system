@@ -1,7 +1,6 @@
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MiniLibrary.API.Infrastructure;
@@ -22,7 +21,6 @@ public static class ServiceCollectionExtensions
         services.AddSwaggerConfiguration();
         services.AddJwtAuthentication(configuration);
         services.AddCorsPolicy();
-        services.AddHealthChecksConfiguration();
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
         return services;
@@ -148,17 +146,6 @@ public static class ServiceCollectionExtensions
             //            .AllowCredentials();
             // });
         });
-
-        return services;
-    }
-
-    private static IServiceCollection AddHealthChecksConfiguration(this IServiceCollection services)
-    {
-        services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "api" });
-            // Add more health checks as needed
-            // .AddDbContextCheck<ApplicationDbContext>()
-            // .AddSqlServer(connectionString)
 
         return services;
     }
