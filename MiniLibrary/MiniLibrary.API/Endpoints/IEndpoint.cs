@@ -1,6 +1,6 @@
 namespace MiniLibrary.API.Endpoints;
 
-public class IEndpoint
+public interface IEndpoint
 {
-    
+    void MapEndpoint(IEndpointRouteBuilder app);
 }

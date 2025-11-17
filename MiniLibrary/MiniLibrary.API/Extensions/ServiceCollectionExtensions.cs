@@ -1,3 +1,10 @@
+using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using MiniLibrary.API.Infrastructure;
+
 namespace MiniLibrary.API.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -9,7 +16,8 @@ public static class ServiceCollectionExtensions
         services.AddEndpointsApiExplorer();
         services.AddHttpContextAccessor();
         services.AddProblemDetails();
-        
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+
         services.AddSwaggerConfiguration();
         services.AddJwtAuthentication(configuration);
         services.AddCorsPolicy();
@@ -24,21 +32,14 @@ public static class ServiceCollectionExtensions
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Mini Library Management API",
+                Title = "Mini Library Management",
                 Version = "v1",
-                Description = "A Library Management System API for managing books, members, and borrowings",
-                Contact = new OpenApiContact
-                {
-                    Name = "Mini Library Team",
-                    Email = "support@minilibrary.com"
-                }
+                Description = "A Library Management System API for managing books, members, and borrowings"
             });
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = @"JWT Authorization header using the Bearer scheme. 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      Example: 'Bearer 12345abcdef'",
+                Description = "Please enter a valid token",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
@@ -57,14 +58,9 @@ public static class ServiceCollectionExtensions
                             Id = "Bearer"
                         }
                     },
-                    Array.Empty()
+                    Array.Empty<string>()
                 }
             });
-
-            // Include XML comments if you have them
-            // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            // options.IncludeXmlComments(xmlPath);
         });
 
         return services;
@@ -86,7 +82,7 @@ public static class ServiceCollectionExtensions
         .AddJwtBearer(options =>
         {
             options.SaveToken = true;
-            options.RequireHttpsMetadata = false; // Set to true in production
+            options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -128,15 +124,7 @@ public static class ServiceCollectionExtensions
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             });
-
-            // For production, use specific origins:
-            // options.AddPolicy("AllowSpecific", builder =>
-            // {
-            //     builder.WithOrigins("https://yourdomain.com")
-            //            .AllowAnyMethod()
-            //            .AllowAnyHeader()
-            //            .AllowCredentials();
-            // });
+            
         });
 
         return services;
