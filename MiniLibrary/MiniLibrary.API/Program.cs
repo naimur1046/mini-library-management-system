@@ -12,8 +12,6 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 
 // Add services to the container
 builder.Services.AddApiServices(builder.Configuration);
-    // TODO: Add Application layer services here when needed
-    // TODO: Add Infrastructure layer services here when needed
 
 WebApplication app = builder.Build();
 
