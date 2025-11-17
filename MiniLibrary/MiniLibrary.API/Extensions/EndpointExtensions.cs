@@ -1,3 +1,6 @@
+using System.Reflection;
+using MiniLibrary.API.Endpoints;
+
 namespace MiniLibrary.API.Extensions;
 
 public static class EndpointExtensions
@@ -6,7 +9,6 @@ public static class EndpointExtensions
         this IServiceCollection services,
         Assembly assembly)
     {
-        // Get all types that implement IEndpoint
         var endpointTypes = assembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && typeof(IEndpoint).IsAssignableFrom(t));
 
@@ -22,14 +24,11 @@ public static class EndpointExtensions
         this WebApplication app,
         RouteGroupBuilder? routeGroupBuilder = null)
     {
-        // Get all registered endpoints
         using var scope = app.Services.CreateScope();
-        var endpoints = scope.ServiceProvider.GetRequiredService<IEnumerable>();
-
-        // Determine the base builder
-        IEndpointRouteBuilder builder = routeGroupBuilder ?? app;
-
-        // Map each endpoint
+        var endpoints = scope.ServiceProvider.GetRequiredService<IEnumerable<IEndpoint>>();
+        
+        IEndpointRouteBuilder builder = routeGroupBuilder is not null ? routeGroupBuilder : app;
+        
         foreach (var endpoint in endpoints)
         {
             endpoint.MapEndpoint(builder);
@@ -37,10 +36,7 @@ public static class EndpointExtensions
 
         return app;
     }
-
-    /// 
-    /// Creates a versioned API group
-    /// 
+    
     public static RouteGroupBuilder MapApiGroup(
         this WebApplication app,
         string version = "v1")
