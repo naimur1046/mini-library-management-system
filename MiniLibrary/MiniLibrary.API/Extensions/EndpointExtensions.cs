@@ -9,7 +9,6 @@ public static class EndpointExtensions
         this IServiceCollection services,
         Assembly assembly)
     {
-        // Get all types that implement IEndpoint
         var endpointTypes = assembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && typeof(IEndpoint).IsAssignableFrom(t));
 
@@ -25,14 +24,11 @@ public static class EndpointExtensions
         this WebApplication app,
         RouteGroupBuilder? routeGroupBuilder = null)
     {
-        // Get all registered endpoints
         using var scope = app.Services.CreateScope();
         var endpoints = scope.ServiceProvider.GetRequiredService<IEnumerable<IEndpoint>>();
-
-        // Determine the base builder
+        
         IEndpointRouteBuilder builder = routeGroupBuilder is not null ? routeGroupBuilder : app;
-
-        // Map each endpoint
+        
         foreach (var endpoint in endpoints)
         {
             endpoint.MapEndpoint(builder);
