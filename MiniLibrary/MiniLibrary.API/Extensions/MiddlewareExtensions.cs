@@ -10,8 +10,8 @@ public static class MiddlewareExtensions
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Mini Library API V1");
-            options.RoutePrefix = string.Empty; // Swagger at root
-            options.DocumentTitle = "Mini Library API Documentation";
+            options.RoutePrefix = string.Empty;
+            options.DocumentTitle = "Mini Library API";
         });
 
         return app;
