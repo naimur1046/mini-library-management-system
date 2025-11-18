@@ -10,8 +10,6 @@ public sealed class BorrowItem : Entity, IAuditableEntity
     public Guid BookId { get; set; }
     public Book Book { get; set; } = null!;
     public DateTime? ReturnDate { get; set; }
-
-    // IAuditableEntity
     public DateTime CreatedOnUtc { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime? ModifiedOnUtc { get; set; }

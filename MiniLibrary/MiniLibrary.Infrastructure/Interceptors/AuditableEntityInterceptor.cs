@@ -42,8 +42,7 @@ public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
         {
             return;
         }
-
-        // Get current user ID from HTTP context, or use "system" as fallback
+        
         var currentUserId = _httpContextAccessor.HttpContext?.User.GetUserId().ToString() ?? "system";
         var currentTime = _dateTimeProvider.UtcNow;
 
