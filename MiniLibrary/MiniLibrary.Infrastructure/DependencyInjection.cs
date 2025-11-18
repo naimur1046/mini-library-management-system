@@ -65,8 +65,9 @@ public static class DependencyInjection
             ?? configuration.GetConnectionString("DefaultConnection");
 
         services
-            .AddHealthChecks()
-            .AddNpgSql(connectionString!);
+            .AddHealthChecks();
+            // Temporarily disabled PostgreSQL health check for debugging
+            //.AddNpgSql(connectionString!);
 
         return services;
     }
