@@ -1,11 +1,24 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using MiniLibrary.Infrastructure.Authentication;
 using SharedKernel;
 
-namespace MiniLibrary.Infrastructure.Persistence;
+namespace MiniLibrary.Infrastructure.Interceptors;
 
 public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public AuditableEntityInterceptor(
+        IHttpContextAccessor httpContextAccessor,
+        IDateTimeProvider dateTimeProvider)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _dateTimeProvider = dateTimeProvider;
+    }
+
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
         InterceptionResult<int> result)
@@ -23,16 +36,16 @@ public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void UpdateAuditableEntities(DbContext? context)
+    private void UpdateAuditableEntities(DbContext? context)
     {
         if (context is null)
         {
             return;
         }
 
-        // Get current user ID - you can inject ICurrentUserService or use IHttpContextAccessor
-        // For now, using a placeholder - replace with actual user context
-        var currentUserId = "system"; // TODO: Get from ICurrentUserService
+        // Get current user ID from HTTP context, or use "system" as fallback
+        var currentUserId = _httpContextAccessor.HttpContext?.User.GetUserId().ToString() ?? "system";
+        var currentTime = _dateTimeProvider.UtcNow;
 
         var entries = context.ChangeTracker.Entries<IAuditableEntity>();
 
@@ -40,13 +53,13 @@ public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedOnUtc = DateTime.UtcNow;
+                entry.Entity.CreatedOnUtc = currentTime;
                 entry.Entity.CreatedBy = currentUserId;
             }
 
             if (entry.State == EntityState.Modified || entry.State == EntityState.Added)
             {
-                entry.Entity.ModifiedOnUtc = DateTime.UtcNow;
+                entry.Entity.ModifiedOnUtc = currentTime;
                 entry.Entity.ModifiedBy = currentUserId;
             }
         }
@@ -59,7 +72,7 @@ public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
             {
                 entry.State = EntityState.Modified;
                 entry.Entity.IsDeleted = true;
-                entry.Entity.DeletedOnUtc = DateTime.UtcNow;
+                entry.Entity.DeletedOnUtc = currentTime;
                 entry.Entity.DeletedBy = currentUserId;
             }
         }
