@@ -1,13 +1,19 @@
-using MiniLibrary.Domain.Common;
-using MiniLibrary.Domain.Entities.Books;
+using SharedKernel;
+using Domain.Books;
 
-namespace MiniLibrary.Domain.Entities.Borrows;
+namespace Domain.Borrows;
 
-public class BorrowItem : BaseEntity
+public sealed class BorrowItem : Entity, IAuditableEntity
 {
-    public int BorrowId { get; private set; }
-    public Borrow Borrow { get; private set; }
-    public int BookId { get; private set; }
-    public Book Book { get; private set; }
-    public DateTime? ReturnDate { get; private set; }
+    public Guid BorrowId { get; set; }
+    public Borrow Borrow { get; set; } = null!;
+    public Guid BookId { get; set; }
+    public Book Book { get; set; } = null!;
+    public DateTime? ReturnDate { get; set; }
+
+    // IAuditableEntity
+    public DateTime CreatedOnUtc { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
+    public DateTime? ModifiedOnUtc { get; set; }
+    public string? ModifiedBy { get; set; }
 }

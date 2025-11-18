@@ -1,18 +1,19 @@
-using MiniLibrary.Domain.Common;
-using MiniLibrary.Domain.Entities.Members;
-using MiniLibrary.Domain.Entities.Books;
+using SharedKernel;
+using Domain.Members;
 
-namespace MiniLibrary.Domain.Entities.Borrows;
+namespace Domain.Borrows;
 
-public class Borrow : BaseEntity
+public sealed class Borrow : Entity, IAuditableEntity
 {
-    public int MemberId { get; private set; }
-    public Member Member { get; private set; }
-    public DateTime BorrowDate { get; private set; }
-    public DateTime DueDate { get; private set; }
+    public Guid MemberId { get; set; }
+    public Member Member { get; set; } = null!;
+    public DateTime BorrowDate { get; set; }
+    public DateTime DueDate { get; set; }
+    public ICollection<BorrowItem> BorrowItems { get; set; } = new List<BorrowItem>();
 
-    private readonly List<BorrowItem> _borrowItems = new();
-    public IReadOnlyCollection<BorrowItem> BorrowItems => _borrowItems.AsReadOnly();
-
-    public bool AllReturned() => _borrowItems.All(bi => bi.ReturnDate.HasValue);
+    // IAuditableEntity
+    public DateTime CreatedOnUtc { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
+    public DateTime? ModifiedOnUtc { get; set; }
+    public string? ModifiedBy { get; set; }
 }

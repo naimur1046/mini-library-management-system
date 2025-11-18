@@ -1,14 +1,23 @@
-using System.Collections;
-using MiniLibrary.Domain.Common;
+using SharedKernel;
 
-namespace MiniLibrary.Domain.Entities.Members;
+namespace Domain.Members;
 
-public class Member : BaseEntity
+public sealed class Member : Entity, IAuditableEntity, ISoftDeletableEntity
 {
-    private const int MaxActiveBorrowings = 5;
     public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public DateTime JoinDate { get; private set; }
-    public bool IsActive { get; private set; }
+    public DateTime JoinDate { get; set; }
+    public bool IsActive { get; set; }
+
+    // IAuditableEntity
+    public DateTime CreatedOnUtc { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
+    public DateTime? ModifiedOnUtc { get; set; }
+    public string? ModifiedBy { get; set; }
+
+    // ISoftDeletableEntity
+    public DateTime? DeletedOnUtc { get; set; }
+    public string? DeletedBy { get; set; }
+    public bool IsDeleted { get; set; }
 }
