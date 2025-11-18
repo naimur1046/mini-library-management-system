@@ -32,7 +32,7 @@ internal sealed class CreateBookCommandHandler(
             PublishedYear = command.PublishedYear,
             IsAvailable = command.CopiesAvailable > 0,
             CreatedOnUtc = dateTimeProvider.UtcNow,
-            CreatedBy = "System", // TODO: Get from IUserContext when authentication is implemented
+            CreatedBy = "System",
             IsDeleted = false
         };
 
