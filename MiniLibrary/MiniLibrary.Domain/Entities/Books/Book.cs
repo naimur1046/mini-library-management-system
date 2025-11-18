@@ -11,14 +11,10 @@ public sealed class Book : Entity, IAuditableEntity, ISoftDeletableEntity
     public int CopiesAvailable { get; set; }
     public int PublishedYear { get; set; }
     public bool IsAvailable { get; set; }
-
-    // IAuditableEntity
     public DateTime CreatedOnUtc { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime? ModifiedOnUtc { get; set; }
     public string? ModifiedBy { get; set; }
-
-    // ISoftDeletableEntity
     public DateTime? DeletedOnUtc { get; set; }
     public string? DeletedBy { get; set; }
     public bool IsDeleted { get; set; }
