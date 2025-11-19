@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Books\Get\" />
-      <Folder Include="Borrowings\Delete\" />
       <Folder Include="Borrowings\GetById\" />
       <Folder Include="Borrowings\Get\" />
       <Folder Include="Borrowings\Update\" />

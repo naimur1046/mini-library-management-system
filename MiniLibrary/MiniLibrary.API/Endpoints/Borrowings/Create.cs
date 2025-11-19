@@ -6,7 +6,7 @@ using SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Borrowings;
 
-public class Create
+public sealed class Create : IEndpoint
 {
     public sealed class CreateBorrowingsRequest
     {
