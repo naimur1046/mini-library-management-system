@@ -9,7 +9,7 @@ namespace MiniLibrary.API.Endpoints.Authentication;
 
 internal sealed class Register : IEndpoint
 {
-    public sealed class Request
+    public sealed class RegisterRequest
     {
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ internal sealed class Register : IEndpoint
         public Role Role { get; set; } = Role.User;
     }
 
-    public sealed class Response
+    public sealed class RegisterResponse
     {
         public Guid Id { get; set; }
     }
@@ -25,7 +25,7 @@ internal sealed class Register : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("authentication/register", async (
-            Request request,
+            RegisterRequest request,
             ICommandHandler<RegisterCommand, Guid> handler,
             CancellationToken cancellationToken) =>
         {
@@ -40,13 +40,13 @@ internal sealed class Register : IEndpoint
             Result<Guid> result = await handler.Handle(command, cancellationToken);
 
             return result.Match(
-                onSuccess: id => Results.Created($"/api/v1/users/{id}", new Response { Id = id }),
+                onSuccess: id => Results.Created($"/api/v1/users/{id}", new RegisterResponse { Id = id }),
                 onFailure: CustomResults.Problem);
         })
         .WithName("Register")
         .WithTags(Tags.Authentication)
         .WithOpenApi()
-        .Produces<Response>(StatusCodes.Status201Created)
+        .Produces<RegisterResponse>(StatusCodes.Status201Created)
         .ProducesValidationProblem()
         .ProducesProblem(StatusCodes.Status409Conflict);
     }

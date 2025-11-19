@@ -8,13 +8,14 @@ namespace MiniLibrary.API.Endpoints.Authentication;
 
 internal sealed class Login : IEndpoint
 {
-    public sealed class Request
+    public sealed class LoginRequest
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public LoginRequest() { }
     }
 
-    public sealed class Response
+    public sealed class LoginResponse
     {
         public string Token { get; set; } = string.Empty;
     }
@@ -22,7 +23,7 @@ internal sealed class Login : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("authentication/login", async (
-            Request request,
+            LoginRequest request,
             ICommandHandler<LoginCommand, string> handler,
             CancellationToken cancellationToken) =>
         {
@@ -35,13 +36,13 @@ internal sealed class Login : IEndpoint
             Result<string> result = await handler.Handle(command, cancellationToken);
 
             return result.Match(
-                onSuccess: token => Results.Ok(new Response { Token = token }),
+                onSuccess: token => Results.Ok(new LoginResponse { Token = token }),
                 onFailure: CustomResults.Problem);
         })
         .WithName("Login")
         .WithTags(Tags.Authentication)
         .WithOpenApi()
-        .Produces<Response>(StatusCodes.Status200OK)
+        .Produces<LoginResponse>(StatusCodes.Status200OK)
         .ProducesValidationProblem()
         .ProducesProblem(StatusCodes.Status401Unauthorized);
     }
