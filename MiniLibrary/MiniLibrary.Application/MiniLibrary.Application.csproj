@@ -15,7 +15,6 @@
       <Folder Include="Borrowings\Get\" />
       <Folder Include="Borrowings\Update\" />
       <Folder Include="Common\" />
-      <Folder Include="Members\Delete\" />
       <Folder Include="Members\GetById\" />
       <Folder Include="Members\Get\" />
       <Folder Include="Members\Update\" />
