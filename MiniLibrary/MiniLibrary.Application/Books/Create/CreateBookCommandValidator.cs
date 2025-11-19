@@ -22,9 +22,7 @@ internal sealed class CreateBookCommandValidator : AbstractValidator<CreateBookC
             .NotEmpty()
             .WithMessage("ISBN is required")
             .MaximumLength(20)
-            .WithMessage("ISBN must not exceed 20 characters")
-            .Matches(@"^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$")
-            .WithMessage("ISBN format is invalid");
+            .WithMessage("ISBN must not exceed 20 characters");
 
         RuleFor(c => c.Category)
             .NotEmpty()
@@ -37,8 +35,6 @@ internal sealed class CreateBookCommandValidator : AbstractValidator<CreateBookC
             .WithMessage("Copies available must be greater than or equal to 0");
 
         RuleFor(c => c.PublishedYear)
-            .GreaterThan(1000)
-            .WithMessage("Published year must be a valid year")
             .LessThanOrEqualTo(DateTime.UtcNow.Year)
             .WithMessage("Published year cannot be in the future");
     }

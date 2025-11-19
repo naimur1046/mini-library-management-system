@@ -13,7 +13,6 @@ internal sealed class CreateBookCommandHandler(
 {
     public async Task<Result<Guid>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
     {
-        // Check if a book with the same ISBN already exists
         bool isbnExists = await context.Books
             .AnyAsync(b => b.ISBN == command.ISBN && !b.IsDeleted, cancellationToken);
 

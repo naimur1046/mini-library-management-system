@@ -7,8 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Books\Delete\" />
-      <Folder Include="Books\GetById\" />
       <Folder Include="Books\Get\" />
       <Folder Include="Books\Update\" />
       <Folder Include="Borrowings\Create\" />
