@@ -8,7 +8,7 @@ namespace MiniLibrary.API.Endpoints.Members;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed class Request
+    public sealed class CreateMemberRequest
     {
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ internal sealed class Create : IEndpoint
         public bool IsActive { get; set; } = true;
     }
 
-    public sealed class Response
+    public sealed class CreateMemberResponse
     {
         public Guid Id { get; set; }
     }
@@ -25,7 +25,7 @@ internal sealed class Create : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("members", async (
-                Request request,
+                CreateMemberRequest request,
                 ICommandHandler<CreateMemberCommand, Guid> handler,
                 CancellationToken cancellationToken) =>
             {
@@ -41,14 +41,14 @@ internal sealed class Create : IEndpoint
                 Result<Guid> result = await handler.Handle(command, cancellationToken);
 
                 return result.Match(
-                    onSuccess: id => Results.Created($"/api/v1/members/{id}", new Response { Id = id }),
+                    onSuccess: id => Results.Created($"/api/v1/members/{id}", new CreateMemberResponse { Id = id }),
                     onFailure: CustomResults.Problem);
             })
             .RequireAuthorization("AdminOnly")
             .WithName("CreateMember")
             .WithTags(Tags.Members)
             .WithOpenApi()
-            .Produces<Response>(StatusCodes.Status201Created)
+            .Produces<CreateMemberResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status409Conflict);
     }

@@ -8,7 +8,7 @@ namespace MiniLibrary.API.Endpoints.Books;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed class Request
+    public sealed class CreateBookRequest
     {
         public string Title { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ internal sealed class Create : IEndpoint
         public int PublishedYear { get; set; }
     }
 
-    public sealed class Response
+    public sealed class CreateBookResponse
     {
         public Guid Id { get; set; }
     }
@@ -26,7 +26,7 @@ internal sealed class Create : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("books", async (
-            Request request,
+            CreateBookRequest request,
             ICommandHandler<CreateBookCommand, Guid> handler,
             CancellationToken cancellationToken) =>
         {
@@ -43,14 +43,14 @@ internal sealed class Create : IEndpoint
             Result<Guid> result = await handler.Handle(command, cancellationToken);
 
             return result.Match(
-                onSuccess: id => Results.Created($"/api/v1/books/{id}", new Response { Id = id }),
+                onSuccess: id => Results.Created($"/api/v1/books/{id}", new CreateBookResponse { Id = id }),
                 onFailure: CustomResults.Problem);
         })
         .RequireAuthorization("AdminOnly")
         .WithName("CreateBook")
         .WithTags(Tags.Books)
         .WithOpenApi()
-        .Produces<Response>(StatusCodes.Status201Created)
+        .Produces<CreateBookResponse>(StatusCodes.Status201Created)
         .ProducesValidationProblem()
         .ProducesProblem(StatusCodes.Status409Conflict);
     }
