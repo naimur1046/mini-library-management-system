@@ -1,6 +1,7 @@
 using Domain.Books;
 using Domain.Borrows;
 using Domain.Members;
+using Domain.Users;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Infrastructure.DomainEvents;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Member> Members => Set<Member>();
     public DbSet<Borrow> Borrows => Set<Borrow>();
     public DbSet<BorrowItem> BorrowItems => Set<BorrowItem>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
