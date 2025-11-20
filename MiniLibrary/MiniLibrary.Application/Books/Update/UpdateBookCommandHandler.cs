@@ -75,7 +75,7 @@ internal sealed class UpdateBookCommandHandler(
 
         // Update audit fields
         book.ModifiedOnUtc = dateTimeProvider.UtcNow;
-        book.ModifiedBy = "System"; // TODO: Get from current user context
+        book.ModifiedBy = "System";
 
         await context.SaveChangesAsync(cancellationToken);
 
