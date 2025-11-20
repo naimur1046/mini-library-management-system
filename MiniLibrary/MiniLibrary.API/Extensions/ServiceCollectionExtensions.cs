@@ -17,7 +17,6 @@ public static class ServiceCollectionExtensions
         services.AddHttpContextAccessor();
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
-
         services.AddSwaggerConfiguration();
         services.AddJwtAuthentication(configuration);
         services.AddCorsPolicy();

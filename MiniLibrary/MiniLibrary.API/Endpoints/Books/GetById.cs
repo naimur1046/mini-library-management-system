@@ -22,6 +22,7 @@ internal sealed class GetById : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .RequireAuthorization("UserOrAdmin")
         .WithName("GetBookById")
         .WithTags(Tags.Books)
         .WithOpenApi()
