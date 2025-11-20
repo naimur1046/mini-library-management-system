@@ -38,7 +38,7 @@ public sealed class Create : IEndpoint
                     onFailure: CustomResults.Problem
                 );
             })
-            .RequireAuthorization()
+            .RequireAuthorization("AdminOnly")
             .WithName("CreateBorrowing")
             .WithTags(Tags.Borrowings)
             .WithOpenApi()
