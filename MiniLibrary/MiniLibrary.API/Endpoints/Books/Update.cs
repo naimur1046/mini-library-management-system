@@ -10,12 +10,12 @@ internal sealed class Update : IEndpoint
 {
     public sealed class UpdateBookRequest
     {
-        public string Title { get; set; } = string.Empty;
-        public string Author { get; set; } = string.Empty;
-        public string ISBN { get; set; } = string.Empty;
-        public string Category { get; set; } = string.Empty;
-        public int CopiesAvailable { get; set; }
-        public int PublishedYear { get; set; }
+        public string? Title { get; set; }
+        public string? Author { get; set; }
+        public string? ISBN { get; set; }
+        public string? Category { get; set; }
+        public int? CopiesAvailable { get; set; }
+        public int? PublishedYear { get; set; }
     }
     
     public sealed class  UpdateBookResponse
@@ -25,7 +25,7 @@ internal sealed class Update : IEndpoint
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("books/{id:guid}", async (
+        app.MapPatch("books/{id:guid}", async (
                 Guid id,
                 UpdateBookRequest request,
                 ICommandHandler<UpdateBookCommand, Guid> handler,
@@ -45,14 +45,14 @@ internal sealed class Update : IEndpoint
                 Result<Guid> result = await handler.Handle(command, cancellationToken);
 
                 return result.Match(
-                    onSuccess: id => Results.Created($"/api/v1/books/{id}", new UpdateBookResponse { Id = id }),
+                    onSuccess: id => Results.Ok(new UpdateBookResponse { Id = id }),
                     onFailure: CustomResults.Problem);
             })
             .RequireAuthorization("AdminOnly")
             .WithName("UpdateBook")
             .WithTags(Tags.Books)
             .WithOpenApi()
-            .Produces(StatusCodes.Status204NoContent)
+            .Produces<UpdateBookResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status400BadRequest);
