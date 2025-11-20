@@ -1,6 +1,16 @@
-# Mini Library Management System – Backend
+# Mini Library Management System
 
-A secure, RESTful .NET 9 Web API for managing a small library, including books, members, borrow/return operations, and reporting — with JWT authentication and Swagger documentation.
+A modern library management system built with .NET 9.0, PostgreSQL, and Clean Architecture principles. This system provides comprehensive book management, member management, and borrowing tracking capabilities with JWT authentication.
+
+## Table of Contents
+
+- [Features](#Features)
+- [Tech Stack](#Tech)
+- [Prerequisites](#prerequisites)
+- [Setup & Run Instructions](#setup--run-instructions)
+- [Sample Login Credentials](#sample-login-credentials)
+- [API Workflow Documentation](#api-workflow-documentation)
+- [Project Structure](#project-structure)
 
 ## Features
 
@@ -28,32 +38,6 @@ A secure, RESTful .NET 9 Web API for managing a small library, including books, 
 
 ---
 
-## 📦 Setup & Run Instructions
-
-### Prerequisites
-
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- SQL Server (LocalDB, Express, or Docker) **or** PostgreSQL
-- (Optional) [Postman](https://www.postman.com/)
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/mini-library-api.git
-cd MiniLibrary
-```
-# Mini Library Management System
-
-A modern library management system built with .NET 9.0, PostgreSQL, and Clean Architecture principles. This system provides comprehensive book management, member management, and borrowing tracking capabilities with JWT authentication.
-
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Setup & Run Instructions](#setup--run-instructions)
-- [Sample Login Credentials](#sample-login-credentials)
-- [API Workflow Documentation](#api-workflow-documentation)
-- [Project Structure](#project-structure)
-
 ## Prerequisites
 
 Before running the application, ensure you have the following installed:
@@ -67,7 +51,7 @@ Before running the application, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/your-username/mini-library-api.git
 cd MiniLibrary
 ```
 
@@ -137,6 +121,7 @@ dotnet run
 ```
 
 The API will be available at:
+
 - HTTPS: `https://localhost:5001`
 - HTTP: `http://localhost:5000`
 - Swagger UI: `https://localhost:5001/swagger` (Development mode only)
@@ -276,6 +261,7 @@ Retrieves a paginated list of books.
 - **Endpoint:** `GET /books`
 - **Authorization:** None
 - **Query Parameters:**
+
   - `lastBookId` (optional): GUID - Last book ID for cursor-based pagination
   - `size` (optional): integer - Number of books per page
   - `direction` (optional): string - Direction of pagination (forward/backward)
@@ -307,6 +293,7 @@ Retrieves a specific book by its ID.
 - **Endpoint:** `GET /books/{id}`
 - **Authorization:** None
 - **Path Parameters:**
+
   - `id`: GUID - Book identifier
 
 - **Response:** `200 OK`
@@ -386,6 +373,7 @@ Deletes a book from the library.
 - **Endpoint:** `DELETE /books/{id}`
 - **Authorization:** Required (Admin only)
 - **Path Parameters:**
+
   - `id`: GUID - Book identifier
 
 - **Response:** `204 No Content`
@@ -449,6 +437,7 @@ Deletes a library member.
 - **Endpoint:** `DELETE /members/{id}`
 - **Authorization:** Required (Admin only)
 - **Path Parameters:**
+
   - `id`: GUID - Member identifier
 
 - **Response:** `204 No Content`
@@ -487,6 +476,7 @@ Deletes a borrowing record (returns books).
 - **Endpoint:** `DELETE /borrowings/{id}`
 - **Authorization:** Required (Admin only)
 - **Path Parameters:**
+
   - `id`: GUID - Borrowing identifier
 
 - **Response:** `204 No Content`
@@ -498,6 +488,7 @@ Retrieves borrowing statistics for a date range.
 - **Endpoint:** `GET /borrowings/summary`
 - **Authorization:** Required (Any authenticated user)
 - **Query Parameters:**
+
   - `startDate`: DateTime - Start of the date range
   - `endDate`: DateTime - End of the date range
 
@@ -523,21 +514,21 @@ Retrieves borrowing statistics for a date range.
 
 ### Authorization Requirements
 
-| Endpoint | Admin | User | Public |
-|----------|-------|------|--------|
-| POST /authentication/register | - | - | ✓ |
-| POST /authentication/login | - | - | ✓ |
-| GET /books | - | - | ✓ |
-| GET /books/{id} | - | - | ✓ |
-| POST /books | ✓ | - | - |
-| PATCH /books/{id} | ✓ | - | - |
-| DELETE /books/{id} | ✓ | - | - |
-| POST /members | ✓ | - | - |
-| PUT /members/{id} | ✓ | - | - |
-| DELETE /members/{id} | ✓ | - | - |
-| POST /borrowings | ✓ | ✓ | - |
-| DELETE /borrowings/{id} | ✓ | - | - |
-| GET /borrowings/summary | ✓ | ✓ | - |
+| Endpoint                      | Admin | User | Public |
+| ----------------------------- | ----- | ---- | ------ |
+| POST /authentication/register | -     | -    | ✓      |
+| POST /authentication/login    | -     | -    | ✓      |
+| GET /books                    | -     | -    | ✓      |
+| GET /books/{id}               | -     | -    | ✓      |
+| POST /books                   | ✓     | -    | -      |
+| PATCH /books/{id}             | ✓     | -    | -      |
+| DELETE /books/{id}            | ✓     | -    | -      |
+| POST /members                 | ✓     | -    | -      |
+| PUT /members/{id}             | ✓     | -    | -      |
+| DELETE /members/{id}          | ✓     | -    | -      |
+| POST /borrowings              | ✓     | ✓    | -      |
+| DELETE /borrowings/{id}       | ✓     | -    | -      |
+| GET /borrowings/summary       | ✓     | ✓    | -      |
 
 ---
 
@@ -582,6 +573,7 @@ MiniLibrary/
 ### Logging
 
 Logs are written to:
+
 - Console (real-time)
 - File system: `__logs/log-{Date}.txt`
 
@@ -597,7 +589,7 @@ Swagger UI is available only in Development mode. Access it at `/swagger` when r
 
 ## License
 
-[Your License Here]
+All Rights Reserved © 2025 Naimur Rahman
 
 ## Support
 
