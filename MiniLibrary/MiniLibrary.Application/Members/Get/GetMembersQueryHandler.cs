@@ -1,20 +1,20 @@
-using Domain.Books;
+using Domain.Members;
 using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
 using SharedKernel;
 
-namespace MiniLibrary.Application.Books.Get;
+namespace MiniLibrary.Application.Members.Get;
 
-internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
-    : IQueryHandler<GetBooksQuery, PagedBooksResponse>
+internal sealed class GetMembersQueryHandler(IApplicationDbContext context)
+    : IQueryHandler<GetMembersQuery, PagedMembersResponse>
 {
     private const int DefaultPageSize = 100;
     private const string Forward = "Forward";
     private const string Backward = "Backward";
 
-    public async Task<Result<PagedBooksResponse>> Handle(
-        GetBooksQuery query,
+    public async Task<Result<PagedMembersResponse>> Handle(
+        GetMembersQuery query,
         CancellationToken cancellationToken)
     {
         int pageSize = query.Size ?? DefaultPageSize;
@@ -24,109 +24,109 @@ internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
         
         if (pageSize <= 0 || pageSize > 1000)
         {
-            return Result.Failure<PagedBooksResponse>(
+            return Result.Failure<PagedMembersResponse>(
                 Error.Problem("Books.InvalidPageSize", "Page size must be between 1 and 1000"));
         }
         
         if (direction != Forward && direction != Backward)
         {
-            return Result.Failure<PagedBooksResponse>(
+            return Result.Failure<PagedMembersResponse>(
                 Error.Problem("Books.InvalidDirection", "Direction must be 'up' or 'down'"));
         }
 
-        Guid? cursorBookId = query.LastBookId;
+        Guid? cursorMemberId = query.LastMemberId;
         DateTime? cursorCreatedOnUtc = null;
         
-        if (!cursorBookId.HasValue)
+        if (!cursorMemberId.HasValue)
         {
-            var firstBook = await context.Books
+            var firstMember = await context.Books
                 .Where(b => !b.IsDeleted)
                 .OrderBy(b => b.CreatedOnUtc)
                 .ThenBy(b => b.Id)
                 .Select(b => new { b.Id, b.CreatedOnUtc })
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (firstBook is null)
+            if (firstMember is null)
             {
-                return new PagedBooksResponse
+                return new PagedMembersResponse()
                 {
-                    Books = [],
+                    Members = [],
                     HasMore = false
                 };
             }
 
-            cursorBookId = firstBook.Id;
-            cursorCreatedOnUtc = firstBook.CreatedOnUtc;
+            cursorMemberId = firstMember.Id;
+            cursorCreatedOnUtc = firstMember.CreatedOnUtc;
         }
         else
         {
-            var cursorBook = await context.Books
-                .Where(b => b.Id == cursorBookId.Value && !b.IsDeleted)
+            var cursorMember = await context.Books
+                .Where(b => b.Id == cursorMemberId.Value && !b.IsDeleted)
                 .Select(b => new { b.CreatedOnUtc })
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (cursorBook is null)
+            if (cursorMember is null)
             {
-                return Result.Failure<PagedBooksResponse>(BookErrors.NotFound(cursorBookId.Value));
+                return Result.Failure<PagedMembersResponse>(MemberErrors.NotFound(cursorMemberId.Value));
             }
 
-            cursorCreatedOnUtc = cursorBook.CreatedOnUtc;
+            cursorCreatedOnUtc = cursorMember.CreatedOnUtc;
         }
         
         int fetchSize = pageSize + 1;
 
-        IQueryable<Book> booksQuery = context.Books.Where(b => !b.IsDeleted);
+        IQueryable<Member> membersQuery = context.Members.Where(b => !b.IsDeleted);
 
         if (direction == Forward)
         {
-            booksQuery = booksQuery
+            membersQuery = membersQuery
                 .Where(b => b.CreatedOnUtc > cursorCreatedOnUtc ||
-                           (b.CreatedOnUtc == cursorCreatedOnUtc && b.Id.CompareTo(cursorBookId.Value) > 0))
+                           (b.CreatedOnUtc == cursorCreatedOnUtc && b.Id.CompareTo(cursorMemberId.Value) > 0))
                 .OrderBy(b => b.CreatedOnUtc)
                 .ThenBy(b => b.Id);
         }
         else
         {
-            booksQuery = booksQuery
+            membersQuery = membersQuery
                 .Where(b => b.CreatedOnUtc < cursorCreatedOnUtc ||
-                           (b.CreatedOnUtc == cursorCreatedOnUtc && b.Id.CompareTo(cursorBookId.Value) < 0))
+                           (b.CreatedOnUtc == cursorCreatedOnUtc && b.Id.CompareTo(cursorMemberId.Value) < 0))
                 .OrderByDescending(b => b.CreatedOnUtc)
                 .ThenByDescending(b => b.Id);
         }
 
-        List<BookResponse> books = await booksQuery
+        List<MemberResponse> members = await membersQuery
             .Take(fetchSize)
-            .Select(b => new BookResponse
+            .Select(m => new MemberResponse
             {
-                Id = b.Id,
-                Title = b.Title,
-                Author = b.Author,
-                ISBN = b.ISBN,
-                Category = b.Category,
-                CopiesAvailable = b.CopiesAvailable,
-                PublishedYear = b.PublishedYear,
-                IsAvailable = b.IsAvailable,
-                CreatedOnUtc = b.CreatedOnUtc
+                Id = m.Id,
+                FullName = m.FullName,
+                Email = m.Email,
+                Phone = m.Phone,
+                JoinDate = m.JoinDate,
+                IsActive = m.IsActive,
+                CreatedOnUtc = m.CreatedOnUtc
             })
             .ToListAsync(cancellationToken);
 
-        bool hasMore = books.Count > pageSize;
+
+        bool hasMore = members.Count > pageSize;
         if (hasMore)
         {
-            books = books.Take(pageSize).ToList();
+            members = members.Take(pageSize).ToList();
         }
         
         if (direction == Backward)
         {
-            books.Reverse();
+            members.Reverse();
         }
 
-        var response = new PagedBooksResponse
+        var response = new PagedMembersResponse
         {
-            Books = books,
+            Members = members,
             HasMore = hasMore
         };
 
         return response;
     }
 }
+

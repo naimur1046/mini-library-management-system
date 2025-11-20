@@ -13,7 +13,6 @@
       <Folder Include="Borrowings\Update\" />
       <Folder Include="Common\" />
       <Folder Include="Members\GetById\" />
-      <Folder Include="Members\Get\" />
     </ItemGroup>
 
     <ItemGroup>
