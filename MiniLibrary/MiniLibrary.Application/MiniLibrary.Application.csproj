@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Books\Get\" />
-      <Folder Include="Borrowings\Return\" />
       <Folder Include="Common\" />
     </ItemGroup>
 
