@@ -13,6 +13,7 @@ public sealed class Create : IEndpoint
         public Guid MemberId { get; set; }
         public DateTime BorrowDate { get; set; }
         public DateTime DueDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
         public List<Guid> BookIds { get; set; } = new();
     }
 
@@ -28,6 +29,7 @@ public sealed class Create : IEndpoint
                     MemberId =  request.MemberId,
                     BorrowDate = request.BorrowDate,
                     DueDate = request.DueDate,
+                    ReturnDate = request.ReturnDate,
                     BookIds = request.BookIds
                 };
 

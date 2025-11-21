@@ -27,7 +27,6 @@ internal sealed class Get : IEndpoint
         .WithName("GetBooks")
         .WithTags(Tags.Books)
         .WithOpenApi()
-        .Produces<PagedBooksResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }

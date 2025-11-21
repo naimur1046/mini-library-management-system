@@ -1,0 +1,70 @@
+namespace MiniLibrary.Application.Borrowings.Create;
+
+using Domain.Borrows;
+using Microsoft.EntityFrameworkCore;
+using Abstractions.Data;
+using Abstractions.Messaging;
+using SharedKernel;
+
+internal sealed class CreateBorrowingsCommandHandler(
+    IApplicationDbContext context,
+    IDateTimeProvider dateTimeProvider)
+    : ICommandHandler<CreateBorrowingsCommand, Guid>
+{
+    public async Task<Result<Guid>> Handle(CreateBorrowingsCommand command, CancellationToken cancellationToken)
+    {
+        bool memberExists = await context.Members
+            .AnyAsync(m => m.Id == command.MemberId && !m.IsDeleted, cancellationToken);
+
+        if (!memberExists)
+        {
+            return Result.Failure<Guid>(BorrowErrors.MemberNotFound(command.MemberId));
+        }
+        
+        var books = await context.Books
+            .Where(b => command.BookIds.Contains(b.Id) && !b.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        if (books.Count != command.BookIds.Count)
+        {
+            return Result.Failure<Guid>(BorrowErrors.SomeBooksNotFound);
+        }
+        
+        foreach (var book in books)
+        {
+            if (book.CopiesAvailable <= 0)
+            {
+                return Result.Failure<Guid>(BorrowErrors.BookNotAvailable(book.Id));
+            }
+        }
+        
+        var borrow = new Borrow
+        {
+            MemberId = command.MemberId,
+            BorrowDate = command.BorrowDate,
+            DueDate = command.DueDate,
+            CreatedOnUtc = dateTimeProvider.UtcNow,
+            CreatedBy = "System"
+        };
+        
+        foreach (var book in books)
+        {
+            borrow.BorrowItems.Add(new BorrowItem
+            {
+                BookId = book.Id,
+                ReturnDate = command.ReturnDate,
+                CreatedOnUtc = dateTimeProvider.UtcNow,
+                CreatedBy = "System"
+            });
+            
+            book.CopiesAvailable--;
+            
+            book.IsAvailable = book.CopiesAvailable > 0;
+        }
+        
+        context.Borrows.Add(borrow);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return borrow.Id;
+    }
+}
