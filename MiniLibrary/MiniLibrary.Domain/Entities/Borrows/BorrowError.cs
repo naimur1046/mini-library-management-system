@@ -23,10 +23,13 @@ public static class BorrowErrors
     public static Error BookNotAvailable(Guid bookId) => Error.Conflict(
         "Borrow.BookNotAvailable",
         $"The book with Id '{bookId}' is not available for borrowing.");
+    public static Error BookNotInBorrow => Error.Conflict(
+        "Borrow.BookNotInBorrow",
+        $"The book is not in the borrow");
 
-    public static Error InvalidBorrowDate => Error.Problem(
-        "Borrow.InvalidBorrowDate",
-        "Borrow date cannot be in the future.");
+    public static Error BookAlreadyReturned(Guid bookId) => Error.Conflict(
+        "Borrow.BookAlreadyReturned",
+        $"The book with Id '{bookId}' has already been returned.");
 
     public static Error InvalidDueDate => Error.Problem(
         "Borrow.InvalidDueDate",
