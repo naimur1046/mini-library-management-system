@@ -20,8 +20,7 @@ internal sealed class UpdateBookCommandHandler(
         {
             return Result.Failure<Guid>(BookErrors.NotFound(command.BookId));
         }
-
-        // Check if ISBN is being updated and if the new ISBN already exists
+        
         if (!string.IsNullOrWhiteSpace(command.ISBN) && command.ISBN != book.ISBN)
         {
             bool isbnExists = await context.Books
@@ -32,8 +31,7 @@ internal sealed class UpdateBookCommandHandler(
                 return Result.Failure<Guid>(BookErrors.ISBNAlreadyExists(command.ISBN));
             }
         }
-
-        // Update only the properties that are provided (not null)
+        
         if (!string.IsNullOrWhiteSpace(command.Title))
         {
             book.Title = command.Title;
@@ -72,8 +70,7 @@ internal sealed class UpdateBookCommandHandler(
             }
             book.PublishedYear = command.PublishedYear.Value;
         }
-
-        // Update audit fields
+        
         book.ModifiedOnUtc = dateTimeProvider.UtcNow;
         book.ModifiedBy = "System";
 

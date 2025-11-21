@@ -22,7 +22,7 @@ internal sealed class GetSummary : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
-        .RequireAuthorization()
+        .RequireAuthorization("UserOrAdmin")
         .WithName("GetBorrowingSummary")
         .WithTags(Tags.Borrowings)
         .WithOpenApi()
