@@ -1,5 +1,7 @@
 using System.Reflection;
 using MiniLibrary.API.Extensions;
+using MiniLibrary.Application;
+using MiniLibrary.Infrastructure;
 using Serilog;
 
 try
@@ -10,18 +12,22 @@ try
         loggerConfig.ReadFrom.Configuration(context.Configuration));
     
     builder.Services.AddApiServices(builder.Configuration);
-
+    
+    builder.Services.AddApplication();
+    
+    builder.Services.AddInfrastructure(builder.Configuration);
+    
     WebApplication app = builder.Build();
     
     if (app.Environment.IsDevelopment())
     {
         app.UseSwaggerWithUi();
     }
-    
+
     app.UseRequestContextLogging();
-    
+
     app.UseSerilogRequestLogging();
-    
+
     app.UseExceptionHandler();
 
     app.UseHttpsRedirection();
@@ -33,12 +39,18 @@ try
     app.UseAuthorization();
     
     app.MapEndpoints();
+    
+    foreach (var address in app.Urls)
+    {
+        Console.WriteLine($"  - {address}");
+    }
 
     await app.RunAsync();
 }
 catch (Exception e)
 {
-    Log.Error(e, "An error occurred while starting the Application", e.Message);
+    Log.Fatal(e, "An error occurred while starting the Application");
+    throw;
 }
 finally
 {

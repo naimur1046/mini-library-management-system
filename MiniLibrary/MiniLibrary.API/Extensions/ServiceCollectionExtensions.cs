@@ -17,7 +17,6 @@ public static class ServiceCollectionExtensions
         services.AddHttpContextAccessor();
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
-
         services.AddSwaggerConfiguration();
         services.AddJwtAuthentication(configuration);
         services.AddCorsPolicy();
@@ -109,7 +108,14 @@ public static class ServiceCollectionExtensions
             };
         });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminOnly", policy =>
+                policy.RequireRole("Admin"));
+
+            options.AddPolicy("UserOrAdmin", policy =>
+                policy.RequireRole("User", "Admin"));
+        });
 
         return services;
     }

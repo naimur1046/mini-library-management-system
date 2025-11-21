@@ -28,8 +28,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             Title = "Server Error",
             Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
         };
-
-        // Handle specific exceptions
+        
         switch (exception)
         {
             case ArgumentException:

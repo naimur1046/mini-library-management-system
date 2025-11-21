@@ -7,27 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Abstractions\" />
-      <Folder Include="Books\Create\" />
-      <Folder Include="Books\Delete\" />
-      <Folder Include="Books\GetById\" />
       <Folder Include="Books\Get\" />
-      <Folder Include="Books\Update\" />
-      <Folder Include="Borrowings\Create\" />
-      <Folder Include="Borrowings\Delete\" />
-      <Folder Include="Borrowings\GetById\" />
-      <Folder Include="Borrowings\Get\" />
-      <Folder Include="Borrowings\Update\" />
       <Folder Include="Common\" />
-      <Folder Include="Members\Create\" />
-      <Folder Include="Members\Delete\" />
-      <Folder Include="Members\GetById\" />
-      <Folder Include="Members\Get\" />
-      <Folder Include="Members\Update\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MiniLibrary.Domain\MiniLibrary.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+      <PackageReference Include="Scrutor" Version="6.1.0" />
+      <PackageReference Include="Serilog" Version="4.3.0" />
     </ItemGroup>
 
 </Project>
