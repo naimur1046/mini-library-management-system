@@ -1,10 +1,10 @@
-namespace MiniLibrary.Application.Borrowings.Create;
-
 using Domain.Borrows;
 using Microsoft.EntityFrameworkCore;
-using Abstractions.Data;
-using Abstractions.Messaging;
+using MiniLibrary.Application.Abstractions.Data;
+using MiniLibrary.Application.Abstractions.Messaging;
 using SharedKernel;
+
+namespace MiniLibrary.Application.Borrowings.Create;
 
 internal sealed class CreateBorrowingsCommandHandler(
     IApplicationDbContext context,
@@ -32,7 +32,7 @@ internal sealed class CreateBorrowingsCommandHandler(
         
         foreach (var book in books)
         {
-            if (book.CopiesAvailable <= 0)
+            if (book.CopiesAvailable <= 0 || !book.IsAvailable)
             {
                 return Result.Failure<Guid>(BorrowErrors.BookNotAvailable(book.Id));
             }
