@@ -27,7 +27,14 @@ internal sealed class ReturnBook : IEndpoint
                 onSuccess: id => Results.Ok(id),
                 onFailure: CustomResults.Problem
             );
-        });
+        })
+        .RequireAuthorization("AdminOnly")
+        .WithName("ReturnBorrowing")
+        .WithTags(Tags.Borrowings)
+        .WithOpenApi()
+        .Produces<Guid>(StatusCodes.Status201Created)
+        .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
 }
