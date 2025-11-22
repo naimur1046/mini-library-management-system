@@ -5,9 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
+using MiniLibrary.Application.Abstractions.Email;
 using MiniLibrary.Infrastructure.Authentication;
 using MiniLibrary.Infrastructure.Database;
 using MiniLibrary.Infrastructure.DomainEvents;
+using MiniLibrary.Infrastructure.Email;
 using MiniLibrary.Infrastructure.Interceptors;
 using MiniLibrary.Infrastructure.Time;
 using SharedKernel;
@@ -22,13 +24,25 @@ public static class DependencyInjection
         services
             .AddServices()
             .AddDatabase(configuration)
-            .AddAuthenticationServices();
+            .AddAuthenticationServices()
+            .AddEmailConfiguration(configuration);
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
+
+        services.AddScoped<IEmailService, EmailService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddEmailConfiguration(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<Email.EmailSettings>(configuration.GetSection("EmailSettings"));
 
         return services;
     }

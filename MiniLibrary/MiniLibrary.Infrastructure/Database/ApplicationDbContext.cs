@@ -1,5 +1,6 @@
 using Domain.Books;
 using Domain.Borrows;
+using Domain.EmailLogs;
 using Domain.Members;
 using Domain.Users;
 using MiniLibrary.Application.Abstractions.Data;
@@ -26,6 +27,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Borrow> Borrows => Set<Borrow>();
     public DbSet<BorrowItem> BorrowItems => Set<BorrowItem>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<EmailLog> EmailLogs => Set<EmailLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
