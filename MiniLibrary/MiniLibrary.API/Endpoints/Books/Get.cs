@@ -14,10 +14,13 @@ internal sealed class Get : IEndpoint
             Guid? lastBookId,
             int? size,
             string? direction,
+            string? title,
+            string? category,
+            string? isbn,
             IQueryHandler<GetBooksQuery, PagedBooksResponse> handler,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetBooksQuery(lastBookId, size, direction);
+            var query = new GetBooksQuery(lastBookId, size, direction, title, category, isbn);
 
             Result<PagedBooksResponse> result = await handler.Handle(query, cancellationToken);
 

@@ -5,4 +5,7 @@ namespace MiniLibrary.Application.Books.Get;
 public sealed record GetBooksQuery(
     Guid? LastBookId,
     int? Size,
-    string? Direction) : IQuery<PagedBooksResponse>;
+    string? Direction,
+    string? Title,
+    string? Category,
+    string? ISBN) : IQuery<PagedBooksResponse>;
