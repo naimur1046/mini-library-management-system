@@ -9,7 +9,7 @@ namespace MiniLibrary.API.Endpoints.Authentication;
 
 internal sealed class Register : IEndpoint
 {
-    public sealed class RegisterRequest
+    private sealed class RegisterRequest
     {
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ internal sealed class Register : IEndpoint
         public Role Role { get; set; } = Role.User;
     }
 
-    public sealed class RegisterResponse
+    private sealed class RegisterResponse
     {
         public Guid Id { get; set; }
     }

@@ -8,21 +8,15 @@ internal sealed class CreateBookCommandValidator : AbstractValidator<CreateBookC
     {
         RuleFor(c => c.Title)
             .NotEmpty()
-            .WithMessage("Title is required")
-            .MaximumLength(200)
-            .WithMessage("Title must not exceed 200 characters");
+            .WithMessage("Title is required");
 
         RuleFor(c => c.Author)
             .NotEmpty()
-            .WithMessage("Author is required")
-            .MaximumLength(100)
-            .WithMessage("Author must not exceed 100 characters");
+            .WithMessage("Author is required");
 
         RuleFor(c => c.ISBN)
             .NotEmpty()
-            .WithMessage("ISBN is required")
-            .MaximumLength(20)
-            .WithMessage("ISBN must not exceed 20 characters");
+            .WithMessage("ISBN is required");
 
         RuleFor(c => c.Category)
             .NotEmpty()
