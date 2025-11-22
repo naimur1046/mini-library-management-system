@@ -2,7 +2,7 @@ using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Domain.Members;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Members.Create;
 

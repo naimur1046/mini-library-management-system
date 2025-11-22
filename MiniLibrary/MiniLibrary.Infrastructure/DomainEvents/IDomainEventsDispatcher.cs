@@ -1,4 +1,4 @@
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Infrastructure.DomainEvents;
 

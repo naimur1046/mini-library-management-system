@@ -1,4 +1,4 @@
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace Domain.Borrows;
 

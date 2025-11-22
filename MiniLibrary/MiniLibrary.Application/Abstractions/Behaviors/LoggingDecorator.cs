@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MiniLibrary.Application.Abstractions.Messaging;
 using Serilog.Context;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Abstractions.Behaviors;
 

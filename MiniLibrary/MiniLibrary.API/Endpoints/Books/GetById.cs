@@ -3,7 +3,7 @@ using MiniLibrary.Application.Books.Get;
 using MiniLibrary.Application.Books.GetById;
 using MiniLibrary.API.Extensions;
 using MiniLibrary.API.Infrastructure;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Books;
 
