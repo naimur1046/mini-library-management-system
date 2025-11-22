@@ -8,17 +8,13 @@ internal sealed class RegisterCommandValidator : AbstractValidator<RegisterComma
     {
         RuleFor(c => c.FullName)
             .NotEmpty()
-            .WithMessage("Full name is required")
-            .MaximumLength(200)
-            .WithMessage("Full name must not exceed 200 characters");
+            .WithMessage("Full name is required");
 
         RuleFor(c => c.Email)
             .NotEmpty()
             .WithMessage("Email is required")
             .EmailAddress()
-            .WithMessage("Email must be a valid email address")
-            .MaximumLength(100)
-            .WithMessage("Email must not exceed 100 characters");
+            .WithMessage("Email must be a valid email address");
 
         RuleFor(c => c.Password)
             .NotEmpty()

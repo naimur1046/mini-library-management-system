@@ -12,7 +12,6 @@ internal sealed class Login : IEndpoint
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public LoginRequest() { }
     }
 
     public sealed class LoginResponse
