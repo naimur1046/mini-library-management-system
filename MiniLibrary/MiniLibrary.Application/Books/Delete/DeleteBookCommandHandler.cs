@@ -25,8 +25,6 @@ internal sealed class DeleteBookCommandHandler(
         
         book.IsDeleted = true;
         book.IsAvailable = false;
-        book.DeletedOnUtc = dateTimeProvider.UtcNow;
-        book.DeletedBy = "System";
 
         await context.SaveChangesAsync(cancellationToken);
 

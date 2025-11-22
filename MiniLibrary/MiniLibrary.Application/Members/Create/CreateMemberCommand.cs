@@ -8,5 +8,4 @@ public sealed class CreateMemberCommand : ICommand<Guid>
     public string Phone { get; set; } = string.Empty;
     public DateTime JoinDate { get; set; }
     public bool IsActive { get; set; }
-    public string CreatedBy { get; set; } = "System";
 }

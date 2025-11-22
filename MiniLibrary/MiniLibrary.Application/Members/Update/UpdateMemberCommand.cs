@@ -15,6 +15,4 @@ public class UpdateMemberCommand : ICommand<Guid>
     public DateTime JoinDate { get; set; }
 
     public bool IsActive { get; set; }
-
-    public string ModifiedBy { get; set; } = "System";
 }

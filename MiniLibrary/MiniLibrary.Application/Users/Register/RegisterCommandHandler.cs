@@ -32,8 +32,6 @@ internal sealed class RegisterCommandHandler(
             PasswordHash = passwordHash,
             Role = command.Role,
             IsActive = true,
-            CreatedOnUtc = dateTimeProvider.UtcNow,
-            CreatedBy = "System",
             IsDeleted = false
         };
 

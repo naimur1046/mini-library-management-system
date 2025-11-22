@@ -29,7 +29,6 @@ internal sealed class CreateMemberCommandHandler(
             JoinDate = command.JoinDate,
             IsActive = command.IsActive,
             CreatedOnUtc = dateTimeProvider.UtcNow,
-            CreatedBy = command.CreatedBy,
             IsDeleted = false
         };
 

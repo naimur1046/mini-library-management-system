@@ -30,8 +30,6 @@ internal sealed class CreateBookCommandHandler(
             CopiesAvailable = command.CopiesAvailable,
             PublishedYear = command.PublishedYear,
             IsAvailable = command.CopiesAvailable > 0,
-            CreatedOnUtc = dateTimeProvider.UtcNow,
-            CreatedBy = "System",
             IsDeleted = false
         };
 
