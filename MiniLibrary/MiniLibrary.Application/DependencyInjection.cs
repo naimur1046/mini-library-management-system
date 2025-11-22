@@ -28,6 +28,11 @@ public static class DependencyInjection
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(LoggingDecorator.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingDecorator.CommandBaseHandler<>));
 
+        // Simulated delay decorator - wraps all commands and queries with a 2000ms delay
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(SimulatedDelayDecorator.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(SimulatedDelayDecorator.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(SimulatedDelayDecorator.CommandBaseHandler<>));
+
         services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
             .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
             .AsImplementedInterfaces()

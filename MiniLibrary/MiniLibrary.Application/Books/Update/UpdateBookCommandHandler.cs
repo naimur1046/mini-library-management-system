@@ -71,9 +71,6 @@ internal sealed class UpdateBookCommandHandler(
             book.PublishedYear = command.PublishedYear.Value;
         }
         
-        book.ModifiedOnUtc = dateTimeProvider.UtcNow;
-        book.ModifiedBy = "System";
-
         await context.SaveChangesAsync(cancellationToken);
 
         return book.Id;
