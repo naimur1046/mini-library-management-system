@@ -2,7 +2,7 @@ using Domain.Members;
 using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 using MiniLibrary.Application.Members.Get;
 
 namespace MiniLibrary.Application.Members.GetById;

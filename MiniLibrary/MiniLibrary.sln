@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLibrary.Domain", "MiniL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLibrary.API", "MiniLibrary.API\MiniLibrary.API.csproj", "{73A1E295-F98D-4F83-8392-80F4DAB0B6E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{8812BE83-EA31-4FEE-94B3-0BC42F77F92F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLibrary.SharedKernel", "MiniLibrary.SharedKernel\MiniLibrary.SharedKernel.csproj", "{8812BE83-EA31-4FEE-94B3-0BC42F77F92F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
