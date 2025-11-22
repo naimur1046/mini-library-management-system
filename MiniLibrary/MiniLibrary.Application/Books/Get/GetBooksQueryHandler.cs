@@ -31,13 +31,11 @@ internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
         if (direction != Forward && direction != Backward)
         {
             return Result.Failure<PagedBooksResponse>(
-                Error.Problem("Books.InvalidDirection", "Direction must be 'up' or 'down'"));
+                Error.Problem("Books.InvalidDirection", "Direction must be 'Forward' or 'Backword'"));
         }
-
-        // Build base query with filters
+        
         IQueryable<Book> baseQuery = context.Books.Where(b => !b.IsDeleted);
-
-        // Apply filters
+        
         if (!string.IsNullOrWhiteSpace(query.Title))
         {
             baseQuery = baseQuery.Where(b => b.Title.ToLower().Contains(query.Title.ToLower()));

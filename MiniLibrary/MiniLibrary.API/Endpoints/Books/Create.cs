@@ -46,7 +46,7 @@ internal sealed class Create : IEndpoint
                 onSuccess: id => Results.Created($"/api/v1/books/{id}", new CreateBookResponse { Id = id }),
                 onFailure: CustomResults.Problem);
         })
-        .RequireAuthorization("AdminOnly")
+        .RequireAuthorization("UserOrAdmin")
         .WithName("CreateBook")
         .WithTags(Tags.Books)
         .WithOpenApi()
