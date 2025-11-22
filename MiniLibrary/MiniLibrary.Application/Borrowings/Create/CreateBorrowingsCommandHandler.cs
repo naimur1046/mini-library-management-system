@@ -22,7 +22,7 @@ internal sealed class CreateBorrowingsCommandHandler(
         }
         
         var books = await context.Books
-            .Where(b => command.BookIds.Contains(b.Id) && !b.IsDeleted)
+            .Where(b => command.BookIds.Contains(b.Id) && !b.IsDeleted && b.IsAvailable)
             .ToListAsync(cancellationToken);
 
         if (books.Count != command.BookIds.Count)

@@ -34,7 +34,7 @@ internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
                 Error.Problem("Books.InvalidDirection", "Direction must be 'Forward' or 'Backword'"));
         }
         
-        IQueryable<Book> baseQuery = context.Books.Where(b => !b.IsDeleted);
+        IQueryable<Book> baseQuery = context.Books.Where(b => !b.IsDeleted && b.IsAvailable);
         
         if (!string.IsNullOrWhiteSpace(query.Title))
         {
