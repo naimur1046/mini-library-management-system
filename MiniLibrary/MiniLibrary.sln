@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLibrary.API", "MiniLibr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{8812BE83-EA31-4FEE-94B3-0BC42F77F92F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLibrary.OverdueNotificationWorker", "MiniLibrary.OverdueNotificationWorker\MiniLibrary.OverdueNotificationWorker.csproj", "{7313A5B9-35B9-43D3-9DF0-9B529352FE12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{8812BE83-EA31-4FEE-94B3-0BC42F77F92F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8812BE83-EA31-4FEE-94B3-0BC42F77F92F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8812BE83-EA31-4FEE-94B3-0BC42F77F92F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7313A5B9-35B9-43D3-9DF0-9B529352FE12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7313A5B9-35B9-43D3-9DF0-9B529352FE12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7313A5B9-35B9-43D3-9DF0-9B529352FE12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7313A5B9-35B9-43D3-9DF0-9B529352FE12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
