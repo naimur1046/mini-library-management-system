@@ -11,12 +11,10 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.FullName)
-            .IsRequired()
-            .HasMaxLength(200);
+            .IsRequired();
 
         builder.Property(u => u.Email)
-            .IsRequired()
-            .HasMaxLength(100);
+            .IsRequired();
 
         builder.HasIndex(u => u.Email)
             .IsUnique();
@@ -32,8 +30,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.IsActive)
             .IsRequired()
             .HasDefaultValue(true);
-
-        // Audit fields
+        
         builder.Property(u => u.CreatedOnUtc)
             .IsRequired();
 
@@ -43,16 +40,14 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.ModifiedBy)
             .HasMaxLength(100);
-
-        // Soft delete fields
+        
         builder.Property(u => u.IsDeleted)
             .IsRequired()
             .HasDefaultValue(false);
 
         builder.Property(u => u.DeletedBy)
             .HasMaxLength(100);
-
-        // Ignore domain events - they're not persisted
+        
         builder.Ignore(u => u.DomainEvents);
     }
 }
