@@ -11,10 +11,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.FullName)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(200);
 
         builder.Property(u => u.Email)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(100);
 
         builder.HasIndex(u => u.Email)
             .IsUnique();
