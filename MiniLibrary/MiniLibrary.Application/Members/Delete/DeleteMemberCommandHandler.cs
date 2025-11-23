@@ -1,5 +1,6 @@
 using Domain.Members;
 using Microsoft.EntityFrameworkCore;
+using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.SharedKernel;
@@ -8,7 +9,8 @@ namespace MiniLibrary.Application.Members.Delete;
 
 internal sealed class DeleteMemberCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<DeleteMemberCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(DeleteMemberCommand command, CancellationToken cancellationToken)
@@ -24,6 +26,8 @@ internal sealed class DeleteMemberCommandHandler(
         }
         
         member.IsDeleted = true;
+        member.DeletedOnUtc = dateTimeProvider.UtcNow;
+        member.DeletedBy = userContext.Email;
 
         await context.SaveChangesAsync(cancellationToken);
 
