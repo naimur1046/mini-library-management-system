@@ -28,7 +28,7 @@ internal sealed class ReturnBook : IEndpoint
                 onFailure: CustomResults.Problem
             );
         })
-        .RequireAuthorization("AdminOnly")
+        .RequireAuthorization("UserOrAdmin")
         .WithName("ReturnBorrowing")
         .WithTags(Tags.Borrowings)
         .WithOpenApi()
