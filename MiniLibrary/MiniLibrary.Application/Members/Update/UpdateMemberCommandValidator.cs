@@ -10,8 +10,6 @@ internal sealed class UpdateMemberCommandValidator : AbstractValidator<UpdateMem
             .NotEmpty()
             .WithMessage("Member ID is required");
 
-        // Only validate fields if provided
-
         RuleFor(c => c.FullName)
             .MaximumLength(200)
             .When(c => !string.IsNullOrWhiteSpace(c.FullName))

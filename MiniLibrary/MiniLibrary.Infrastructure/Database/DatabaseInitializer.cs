@@ -20,12 +20,10 @@ public static class DatabaseInitializer
             var context = services.GetRequiredService<ApplicationDbContext>();
             var passwordHasher = services.GetRequiredService<IPasswordHasher>();
             var dateTimeProvider = services.GetRequiredService<IDateTimeProvider>();
-
-            // Apply pending migrations
+            
             await context.Database.MigrateAsync();
             logger.LogInformation("Database migrations applied successfully");
-
-            // Seed initial data
+            
             var seeder = new DatabaseSeeder(context, passwordHasher, dateTimeProvider, logger);
             await seeder.SeedAsync();
             logger.LogInformation("Database seeding completed successfully");
