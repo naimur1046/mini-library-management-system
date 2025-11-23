@@ -8,7 +8,7 @@ namespace MiniLibrary.API.Endpoints.Members;
 
 public class Update
 {
-    public sealed class UpdateMemberRequest
+    private sealed class UpdateMemberRequest
     {
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ public class Update
 
     }
     
-    public sealed class UpdateMemberResponse
+    private sealed class UpdateMemberResponse
     {
         public Guid Id { get; set; }
     }
@@ -47,7 +47,7 @@ public class Update
                             onSuccess: id => Results.Created($"/api/v1/members/{id}", new UpdateMemberResponse { Id = id }),
                             onFailure: CustomResults.Problem);
                     })
-                    .RequireAuthorization("AdminOnly")
+                    .RequireAuthorization("UserOrAdmin")
                     .WithName("UpdateMember")
                     .WithTags(Tags.Members)
                     .WithOpenApi()

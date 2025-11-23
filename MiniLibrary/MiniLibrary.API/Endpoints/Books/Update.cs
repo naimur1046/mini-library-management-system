@@ -8,7 +8,7 @@ namespace MiniLibrary.API.Endpoints.Books;
 
 internal sealed class Update : IEndpoint
 {
-    public sealed class UpdateBookRequest
+    private sealed class UpdateBookRequest
     {
         public string? Title { get; set; }
         public string? Author { get; set; }
@@ -18,7 +18,7 @@ internal sealed class Update : IEndpoint
         public int? PublishedYear { get; set; }
     }
     
-    public sealed class  UpdateBookResponse
+    private sealed class  UpdateBookResponse
     {
         public Guid Id { get; set; }
     }
@@ -48,7 +48,7 @@ internal sealed class Update : IEndpoint
                     onSuccess: id => Results.Ok(new UpdateBookResponse { Id = id }),
                     onFailure: CustomResults.Problem);
             })
-            .RequireAuthorization("AdminOnly")
+            .RequireAuthorization("UserOrAdmin")
             .WithName("UpdateBook")
             .WithTags(Tags.Books)
             .WithOpenApi()

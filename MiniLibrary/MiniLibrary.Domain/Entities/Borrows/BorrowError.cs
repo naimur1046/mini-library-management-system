@@ -30,8 +30,4 @@ public static class BorrowErrors
     public static Error BookAlreadyReturned(Guid bookId) => Error.Conflict(
         "Borrow.BookAlreadyReturned",
         $"The book with Id '{bookId}' has already been returned.");
-
-    public static Error InvalidDueDate => Error.Problem(
-        "Borrow.InvalidDueDate",
-        "Due date must be greater than or equal to the borrow date.");
 }

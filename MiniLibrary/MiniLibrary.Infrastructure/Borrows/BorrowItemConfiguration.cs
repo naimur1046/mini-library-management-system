@@ -22,8 +22,7 @@ internal sealed class BorrowItemConfiguration : IEntityTypeConfiguration<BorrowI
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(bi => bi.ReturnDate);
-
-        // Audit fields
+        
         builder.Property(bi => bi.CreatedOnUtc)
             .IsRequired();
 
@@ -33,8 +32,7 @@ internal sealed class BorrowItemConfiguration : IEntityTypeConfiguration<BorrowI
 
         builder.Property(bi => bi.ModifiedBy)
             .HasMaxLength(100);
-
-        // Ignore domain events
+        
         builder.Ignore(bi => bi.DomainEvents);
     }
 }

@@ -15,7 +15,7 @@ internal sealed class GetByIdBookQueryHandler(IApplicationDbContext context)
         CancellationToken cancellationToken)
     {
         BookResponse? book = await context.Books
-            .Where(b => b.Id == query.BookId && !b.IsDeleted)
+            .Where(b => b.Id == query.BookId && !b.IsDeleted && b.IsAvailable)
             .Select(b => new BookResponse
             {
                 Id = b.Id,

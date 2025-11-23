@@ -8,7 +8,7 @@ namespace MiniLibrary.API.Endpoints.Borrowings;
 
 public sealed class Create : IEndpoint
 {
-    public sealed class CreateBorrowingsRequest
+    private sealed class CreateBorrowingsRequest
     {
         public Guid MemberId { get; set; }
         public DateTime BorrowDate { get; set; }
@@ -40,7 +40,7 @@ public sealed class Create : IEndpoint
                     onFailure: CustomResults.Problem
                 );
             })
-            .RequireAuthorization("AdminOnly")
+            .RequireAuthorization("UserOrAdmin")
             .WithName("CreateBorrowing")
             .WithTags(Tags.Borrowings)
             .WithOpenApi()

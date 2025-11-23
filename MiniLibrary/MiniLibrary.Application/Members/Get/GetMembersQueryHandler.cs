@@ -89,7 +89,7 @@ internal sealed class GetMembersQueryHandler(IApplicationDbContext context)
         {
             membersQuery = membersQuery
                 .Where(b => b.CreatedOnUtc < cursorCreatedOnUtc ||
-                           (b.CreatedOnUtc == cursorCreatedOnUtc && b.Id.CompareTo(cursorMemberId.Value) < 0))
+                    (b.CreatedOnUtc == cursorCreatedOnUtc && b.Id.CompareTo(cursorMemberId.Value) < 0))
                 .OrderByDescending(b => b.CreatedOnUtc)
                 .ThenByDescending(b => b.Id);
         }
