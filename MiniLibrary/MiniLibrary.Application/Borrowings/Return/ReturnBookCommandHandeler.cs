@@ -1,14 +1,16 @@
 using Domain.Borrows;
 using Microsoft.EntityFrameworkCore;
+using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Borrowings.Return;
 
 internal sealed class ReturnBookCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<ReturnBookCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(ReturnBookCommand command, CancellationToken cancellationToken)
@@ -45,12 +47,12 @@ internal sealed class ReturnBookCommandHandler(
         
         borrowItem.ReturnDate = dateTimeProvider.UtcNow;
         borrowItem.ModifiedOnUtc = dateTimeProvider.UtcNow;
-        borrowItem.ModifiedBy = "System";
-        
+        borrowItem.ModifiedBy = userContext.Email;
+
         book.CopiesAvailable++;
         book.IsAvailable = book.CopiesAvailable > 0;
         book.ModifiedOnUtc = dateTimeProvider.UtcNow;
-        book.ModifiedBy = "System";
+        book.ModifiedBy = userContext.Email;
         
         await context.SaveChangesAsync(cancellationToken);
 

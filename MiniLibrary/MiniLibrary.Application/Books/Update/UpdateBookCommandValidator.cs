@@ -22,23 +22,17 @@ internal sealed class UpdateBookCommandValidator : AbstractValidator<UpdateBookC
         
         When(c => !string.IsNullOrWhiteSpace(c.Title), () =>
         {
-            RuleFor(c => c.Title)
-                .MaximumLength(200)
-                .WithMessage("Title must not exceed 200 characters");
+            RuleFor(c => c.Title);
         });
         
         When(c => !string.IsNullOrWhiteSpace(c.Author), () =>
         {
-            RuleFor(c => c.Author)
-                .MaximumLength(100)
-                .WithMessage("Author must not exceed 100 characters");
+            RuleFor(c => c.Author);
         });
         
         When(c => !string.IsNullOrWhiteSpace(c.ISBN), () =>
         {
-            RuleFor(c => c.ISBN)
-                .MaximumLength(20)
-                .WithMessage("ISBN must not exceed 20 characters");
+            RuleFor(c => c.ISBN);
         });
         
         When(c => !string.IsNullOrWhiteSpace(c.Category), () =>

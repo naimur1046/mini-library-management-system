@@ -1,14 +1,16 @@
 using Domain.Books;
 using Microsoft.EntityFrameworkCore;
+using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Books.Delete;
 
 internal sealed class DeleteBookCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<DeleteBookCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(DeleteBookCommand command, CancellationToken cancellationToken)
@@ -26,7 +28,7 @@ internal sealed class DeleteBookCommandHandler(
         book.IsDeleted = true;
         book.IsAvailable = false;
         book.DeletedOnUtc = dateTimeProvider.UtcNow;
-        book.DeletedBy = "System";
+        book.DeletedBy = userContext.Email;
 
         await context.SaveChangesAsync(cancellationToken);
 

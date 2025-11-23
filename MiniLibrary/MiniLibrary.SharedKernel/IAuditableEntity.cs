@@ -1,4 +1,4 @@
-namespace SharedKernel;
+namespace MiniLibrary.SharedKernel;
 
 public interface IAuditableEntity
 {

@@ -2,13 +2,13 @@ using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.Application.Books.Create;
 using MiniLibrary.API.Extensions;
 using MiniLibrary.API.Infrastructure;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Books;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed class CreateBookRequest
+    private sealed class CreateBookRequest
     {
         public string Title { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ internal sealed class Create : IEndpoint
         public int PublishedYear { get; set; }
     }
 
-    public sealed class CreateBookResponse
+    private sealed class CreateBookResponse
     {
         public Guid Id { get; set; }
     }
@@ -46,7 +46,7 @@ internal sealed class Create : IEndpoint
                 onSuccess: id => Results.Created($"/api/v1/books/{id}", new CreateBookResponse { Id = id }),
                 onFailure: CustomResults.Problem);
         })
-        .RequireAuthorization("AdminOnly")
+        .RequireAuthorization("UserOrAdmin")
         .WithName("CreateBook")
         .WithTags(Tags.Books)
         .WithOpenApi()

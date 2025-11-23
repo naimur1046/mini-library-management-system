@@ -1,14 +1,16 @@
-namespace MiniLibrary.Application.Borrowings.Create;
-
 using Domain.Borrows;
 using Microsoft.EntityFrameworkCore;
-using Abstractions.Data;
-using Abstractions.Messaging;
-using SharedKernel;
+using MiniLibrary.Application.Abstractions.Authentication;
+using MiniLibrary.Application.Abstractions.Data;
+using MiniLibrary.Application.Abstractions.Messaging;
+using MiniLibrary.SharedKernel;
+
+namespace MiniLibrary.Application.Borrowings.Create;
 
 internal sealed class CreateBorrowingsCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<CreateBorrowingsCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateBorrowingsCommand command, CancellationToken cancellationToken)
@@ -22,7 +24,7 @@ internal sealed class CreateBorrowingsCommandHandler(
         }
         
         var books = await context.Books
-            .Where(b => command.BookIds.Contains(b.Id) && !b.IsDeleted)
+            .Where(b => command.BookIds.Contains(b.Id) && !b.IsDeleted && b.IsAvailable)
             .ToListAsync(cancellationToken);
 
         if (books.Count != command.BookIds.Count)
@@ -32,7 +34,7 @@ internal sealed class CreateBorrowingsCommandHandler(
         
         foreach (var book in books)
         {
-            if (book.CopiesAvailable <= 0)
+            if (book.CopiesAvailable <= 0 || !book.IsAvailable)
             {
                 return Result.Failure<Guid>(BorrowErrors.BookNotAvailable(book.Id));
             }
@@ -44,7 +46,7 @@ internal sealed class CreateBorrowingsCommandHandler(
             BorrowDate = command.BorrowDate,
             DueDate = command.DueDate,
             CreatedOnUtc = dateTimeProvider.UtcNow,
-            CreatedBy = "System"
+            CreatedBy = userContext.Email
         };
         
         foreach (var book in books)
@@ -54,7 +56,7 @@ internal sealed class CreateBorrowingsCommandHandler(
                 BookId = book.Id,
                 ReturnDate = command.ReturnDate,
                 CreatedOnUtc = dateTimeProvider.UtcNow,
-                CreatedBy = "System"
+                CreatedBy = userContext.Email
             });
             
             book.CopiesAvailable--;

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.Application.Books.Get;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Books.GetById;
 
@@ -15,7 +15,7 @@ internal sealed class GetByIdBookQueryHandler(IApplicationDbContext context)
         CancellationToken cancellationToken)
     {
         BookResponse? book = await context.Books
-            .Where(b => b.Id == query.BookId && !b.IsDeleted)
+            .Where(b => b.Id == query.BookId && !b.IsDeleted && b.IsAvailable)
             .Select(b => new BookResponse
             {
                 Id = b.Id,

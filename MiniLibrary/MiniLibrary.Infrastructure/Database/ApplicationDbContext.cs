@@ -4,8 +4,8 @@ using Domain.Members;
 using Domain.Users;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Infrastructure.DomainEvents;
+using MiniLibrary.SharedKernel;
 using Microsoft.EntityFrameworkCore;
-using SharedKernel;
 
 namespace MiniLibrary.Infrastructure.Database;
 

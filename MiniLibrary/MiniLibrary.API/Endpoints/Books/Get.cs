@@ -2,7 +2,7 @@ using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.Application.Books.Get;
 using MiniLibrary.API.Extensions;
 using MiniLibrary.API.Infrastructure;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Books;
 
@@ -14,10 +14,13 @@ internal sealed class Get : IEndpoint
             Guid? lastBookId,
             int? size,
             string? direction,
+            string? title,
+            string? category,
+            string? isbn,
             IQueryHandler<GetBooksQuery, PagedBooksResponse> handler,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetBooksQuery(lastBookId, size, direction);
+            var query = new GetBooksQuery(lastBookId, size, direction, title, category, isbn);
 
             Result<PagedBooksResponse> result = await handler.Handle(query, cancellationToken);
 

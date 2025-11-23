@@ -2,20 +2,19 @@ using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.Application.Users.Login;
 using MiniLibrary.API.Extensions;
 using MiniLibrary.API.Infrastructure;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Authentication;
 
 internal sealed class Login : IEndpoint
 {
-    public sealed class LoginRequest
+    private sealed class LoginRequest
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public LoginRequest() { }
     }
 
-    public sealed class LoginResponse
+    private sealed class LoginResponse
     {
         public string Token { get; set; } = string.Empty;
     }

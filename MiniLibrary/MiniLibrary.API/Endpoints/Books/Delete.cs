@@ -2,7 +2,7 @@ using MiniLibrary.API.Extensions;
 using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.API.Infrastructure;
 using MiniLibrary.Application.Books.Delete;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Books;
 

@@ -28,8 +28,7 @@ internal sealed class BorrowConfiguration : IEntityTypeConfiguration<Borrow>
             .WithOne(bi => bi.Borrow)
             .HasForeignKey(bi => bi.BorrowId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // Audit fields
+        
         builder.Property(b => b.CreatedOnUtc)
             .IsRequired();
 
@@ -39,8 +38,7 @@ internal sealed class BorrowConfiguration : IEntityTypeConfiguration<Borrow>
 
         builder.Property(b => b.ModifiedBy)
             .HasMaxLength(100);
-
-        // Ignore domain events
+        
         builder.Ignore(b => b.DomainEvents);
     }
 }

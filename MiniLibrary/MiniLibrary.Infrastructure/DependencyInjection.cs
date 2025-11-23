@@ -10,7 +10,7 @@ using MiniLibrary.Infrastructure.Database;
 using MiniLibrary.Infrastructure.DomainEvents;
 using MiniLibrary.Infrastructure.Interceptors;
 using MiniLibrary.Infrastructure.Time;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Infrastructure;
 

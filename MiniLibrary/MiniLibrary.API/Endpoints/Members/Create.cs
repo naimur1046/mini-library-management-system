@@ -2,13 +2,13 @@ using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.Application.Members.Create;
 using MiniLibrary.API.Extensions;
 using MiniLibrary.API.Infrastructure;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.API.Endpoints.Members;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed class CreateMemberRequest
+    private sealed class CreateMemberRequest
     {
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -17,7 +17,7 @@ internal sealed class Create : IEndpoint
         public bool IsActive { get; set; } = true;
     }
 
-    public sealed class CreateMemberResponse
+    private sealed class CreateMemberResponse
     {
         public Guid Id { get; set; }
     }
@@ -44,7 +44,7 @@ internal sealed class Create : IEndpoint
                     onSuccess: id => Results.Created($"/api/v1/members/{id}", new CreateMemberResponse { Id = id }),
                     onFailure: CustomResults.Problem);
             })
-            .RequireAuthorization("AdminOnly")
+            .RequireAuthorization("UserOrAdmin")
             .WithName("CreateMember")
             .WithTags(Tags.Members)
             .WithOpenApi()

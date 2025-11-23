@@ -1,14 +1,16 @@
 using Domain.Books;
 using Microsoft.EntityFrameworkCore;
+using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Books.Update;
 
 internal sealed class UpdateBookCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<UpdateBookCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(UpdateBookCommand command, CancellationToken cancellationToken)
@@ -70,9 +72,9 @@ internal sealed class UpdateBookCommandHandler(
             }
             book.PublishedYear = command.PublishedYear.Value;
         }
-        
+
         book.ModifiedOnUtc = dateTimeProvider.UtcNow;
-        book.ModifiedBy = "System";
+        book.ModifiedBy = userContext.Email;
 
         await context.SaveChangesAsync(cancellationToken);
 

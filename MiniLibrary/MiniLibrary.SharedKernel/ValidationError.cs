@@ -1,4 +1,4 @@
-namespace SharedKernel;
+namespace MiniLibrary.SharedKernel;
 
 public sealed record ValidationError : Error
 {

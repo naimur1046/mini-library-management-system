@@ -2,7 +2,7 @@ using Domain.Books;
 using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
-using SharedKernel;
+using MiniLibrary.SharedKernel;
 
 namespace MiniLibrary.Application.Books.Get;
 
@@ -31,16 +31,32 @@ internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
         if (direction != Forward && direction != Backward)
         {
             return Result.Failure<PagedBooksResponse>(
-                Error.Problem("Books.InvalidDirection", "Direction must be 'up' or 'down'"));
+                Error.Problem("Books.InvalidDirection", "Direction must be 'Forward' or 'Backword'"));
+        }
+        
+        IQueryable<Book> baseQuery = context.Books.Where(b => !b.IsDeleted && b.IsAvailable);
+        
+        if (!string.IsNullOrWhiteSpace(query.Title))
+        {
+            baseQuery = baseQuery.Where(b => b.Title.ToLower().Contains(query.Title.ToLower()));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Category))
+        {
+            baseQuery = baseQuery.Where(b => b.Category.ToLower().Contains(query.Category.ToLower()));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.ISBN))
+        {
+            baseQuery = baseQuery.Where(b => b.ISBN.Contains(query.ISBN));
         }
 
         Guid? cursorBookId = query.LastBookId;
         DateTime? cursorCreatedOnUtc = null;
-        
+
         if (!cursorBookId.HasValue)
         {
-            var firstBook = await context.Books
-                .Where(b => !b.IsDeleted)
+            var firstBook = await baseQuery
                 .OrderBy(b => b.CreatedOnUtc)
                 .ThenBy(b => b.Id)
                 .Select(b => new { b.Id, b.CreatedOnUtc })
@@ -60,8 +76,8 @@ internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
         }
         else
         {
-            var cursorBook = await context.Books
-                .Where(b => b.Id == cursorBookId.Value && !b.IsDeleted)
+            var cursorBook = await baseQuery
+                .Where(b => b.Id == cursorBookId.Value)
                 .Select(b => new { b.CreatedOnUtc })
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -72,10 +88,10 @@ internal sealed class GetBooksQueryHandler(IApplicationDbContext context)
 
             cursorCreatedOnUtc = cursorBook.CreatedOnUtc;
         }
-        
+
         int fetchSize = pageSize + 1;
 
-        IQueryable<Book> booksQuery = context.Books.Where(b => !b.IsDeleted);
+        IQueryable<Book> booksQuery = baseQuery;
 
         if (direction == Forward)
         {
