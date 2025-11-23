@@ -1,11 +1,11 @@
 # Mini Library Management System
 
-A modern library management system built with .NET 9.0, PostgreSQL, and Clean Architecture principles. This system provides comprehensive book management, member management, and borrowing tracking capabilities with JWT authentication.
+Library management system built with .NET 9.0, PostgreSQL, and Clean Architecture principles. This system provides comprehensive book management, member management, and borrowing tracking capabilities with JWT authentication.
 
 ## Table of Contents
 
 - [Features](#Features)
-- [Tech Stack](#Tech)
+- [Tech Stack](#Tech-Stack)
 - [Prerequisites](#prerequisites)
 - [Setup & Run Instructions](#setup--run-instructions)
 - [Sample Login Credentials](#sample-login-credentials)
@@ -30,11 +30,17 @@ A modern library management system built with .NET 9.0, PostgreSQL, and Clean Ar
 
 ## Tech Stack
 
-- **Framework**: .NET 8 Web API
-- **ORM**: Entity Framework Core
-- **Database**: SQL Server (compatible with PostgreSQL with minor config change)
-- **Authentication**: JWT Bearer Tokens
-- **API Documentation**: Swagger UI + Postman Collection
+## Technologies Used
+
+- **.NET 9.0** - Application framework
+- **PostgreSQL** - Database
+- **Entity Framework Core 9.0** - ORM
+- **JWT Bearer Authentication** - Security
+- **Serilog** - Logging
+- **Swagger/OpenAPI** - API documentation
+- **Clean Architecture** - Project structure
+- **CQRS Pattern** - Command/Query separation
+- **Result Pattern** - Error handling
 
 ---
 
@@ -44,14 +50,13 @@ Before running the application, ensure you have the following installed:
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - [PostgreSQL 12+](https://www.postgresql.org/download/)
-- IDE: Visual Studio 2022, JetBrains Rider, or VS Code
 
 ## Setup & Run Instructions
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/mini-library-api.git
+git clone https://github.com/naimur1046/mini-library-management-system.git
 cd MiniLibrary
 ```
 
@@ -134,20 +139,13 @@ Navigate to `https://localhost:5001/swagger` to explore and test the API endpoin
 
 ### Creating User Accounts
 
-The system uses a registration-based authentication. No default users are seeded. You need to register users through the API.
+The system seeds a default Admin account automatically if no users exist in the database.
 
-### Registering an Admin User
-
-**POST** `/authentication/register`
-
-```json
-{
-  "fullName": "Admin User",
-  "email": "admin@minilibrary.com",
-  "password": "Admin@123",
-  "role": 2
-}
-```
+| Field    | Value                   |
+| -------- | ----------------------- |
+| Email    | `admin@minilibrary.com` |
+| Password | `Admin@123`             |
+| Role     | `Admin`                 |
 
 ### Registering a Regular User
 
@@ -155,9 +153,9 @@ The system uses a registration-based authentication. No default users are seeded
 
 ```json
 {
-  "fullName": "John Doe",
-  "email": "john.doe@example.com",
-  "password": "User@123",
+  "fullName": "Naimur Rahman",
+  "email": "naimur@gmail.com",
+  "password": "Naimur@123#",
   "role": 1
 }
 ```
@@ -212,9 +210,9 @@ Creates a new user account.
 
 ```json
 {
-  "fullName": "string",
-  "email": "string",
-  "password": "string",
+  "fullName": "Naimur Rahman",
+  "email": "naimur@gmail.com",
+  "password": "Naimur@123#",
   "role": 1 or 2
 }
 ```
@@ -237,8 +235,8 @@ Authenticates a user and returns a JWT token.
 
 ```json
 {
-  "email": "string",
-  "password": "string"
+  "email": "naimur@gmail.com",
+  "password": "Naimur@123#"
 }
 ```
 
@@ -254,17 +252,27 @@ Authenticates a user and returns a JWT token.
 
 ### Books Endpoints
 
-#### 1. Get All Books (Paginated)
+#### 1. Fetch Books (Paginated + Filterable)
 
-Retrieves a paginated list of books.
+Retrieves a paginated list of available books with optional filters and backward and forward navigation.
 
 - **Endpoint:** `GET /books`
-- **Authorization:** None
+- **Authorization:** UserOrAdmin policy required
 - **Query Parameters:**
 
-  - `lastBookId` (optional): GUID - Last book ID for cursor-based pagination
-  - `size` (optional): integer - Number of books per page
-  - `direction` (optional): string - Direction of pagination (forward/backward)
+- **Pagination**
+  | Name | Type | Required | Description |
+  | ------------ | -------- | -------- | ------------------------------------------------------------------------ |
+  | `lastBookId` | `GUID` | No | Cursor value of the last book from the previous response. |
+  | `size` | `int` | No | Page size. Default: 100. Max: 1000. |
+  | `direction` | `string` | No | Pagination direction: `"Forward"` or `"Backward"`. Default: `"Forward"`. |
+
+- **Filtering**
+  | Name | Type | Required | Description |
+  | ---------- | -------- | -------- | ------------------------------------ |
+  | `title` | `string` | No | Filter books by title (contains). |
+  | `category` | `string` | No | Filter books by category (contains). |
+  | `isbn` | `string` | No | Filter books by ISBN (contains). |
 
 - **Response:** `200 OK`
 
@@ -277,12 +285,13 @@ Retrieves a paginated list of books.
       "author": "string",
       "isbn": "string",
       "category": "string",
-      "copiesAvailable": 0,
-      "publishedYear": 0
+      "copiesAvailable": 5,
+      "publishedYear": 2020,
+      "isAvailable": true,
+      "createdOnUtc": "2025-01-01T10:00:00Z"
     }
   ],
-  "hasMore": true,
-  "nextCursor": "guid"
+  "hasMore": true
 }
 ```
 
@@ -291,10 +300,12 @@ Retrieves a paginated list of books.
 Retrieves a specific book by its ID.
 
 - **Endpoint:** `GET /books/{id}`
-- **Authorization:** None
+- **Authorization:** UserOrAdmin policy required
 - **Path Parameters:**
 
-  - `id`: GUID - Book identifier
+| Name | Type   | Required | Description                        |
+| ---- | ------ | -------- | ---------------------------------- |
+| `id` | `GUID` | Yes      | The unique identifier of the book. |
 
 - **Response:** `200 OK`
 
@@ -306,7 +317,9 @@ Retrieves a specific book by its ID.
   "isbn": "string",
   "category": "string",
   "copiesAvailable": 0,
-  "publishedYear": 0
+  "publishedYear": 0,
+  "isAvailable": true,
+  "createdOnUtc": "2025-01-01T10:00:00Z"
 }
 ```
 
@@ -315,7 +328,7 @@ Retrieves a specific book by its ID.
 Creates a new book in the library.
 
 - **Endpoint:** `POST /books`
-- **Authorization:** Required (Admin only)
+- **Authorization:** UserOrAdmin policy required
 - **Request Body:**
 
 ```json
@@ -339,13 +352,17 @@ Creates a new book in the library.
 
 #### 4. Update Book
 
-Updates an existing book (partial update).
+Updates an existing book with partial update support. Only the fields provided in the request body will be updated.
 
 - **Endpoint:** `PATCH /books/{id}`
-- **Authorization:** Required (Admin only)
+- **Authorization:** UserOrAdmin policy required
 - **Path Parameters:**
-  - `id`: GUID - Book identifier
+  | Parameter | Type | Description |
+  | --------- | ---- | ----------------------------- |
+  | `id` | GUID | Unique identifier of the book |
+
 - **Request Body:**
+  All fields are optional. Only the provided fields will be updated.
 
 ```json
 {
@@ -353,8 +370,8 @@ Updates an existing book (partial update).
   "author": "string (optional)",
   "isbn": "string (optional)",
   "category": "string (optional)",
-  "copiesAvailable": 0 (optional),
-  "publishedYear": 0 (optional)
+  "copiesAvailable": 0,
+  "publishedYear": 0
 }
 ```
 
@@ -368,15 +385,22 @@ Updates an existing book (partial update).
 
 #### 5. Delete Book
 
-Deletes a book from the library.
+Soft-deletes a book from the library.
+The book is not permanently removed — instead
+
+- IsDeleted is set to true
+- IsAvailable is set to false
 
 - **Endpoint:** `DELETE /books/{id}`
 - **Authorization:** Required (Admin only)
 - **Path Parameters:**
 
-  - `id`: GUID - Book identifier
+| Parameter | Type | Description                      |
+| --------- | ---- | -------------------------------- |
+| `id`      | GUID | Identifier of the book to delete |
 
 - **Response:** `204 No Content`
+  Book successfully deleted.
 
 ---
 
@@ -387,7 +411,7 @@ Deletes a book from the library.
 Creates a new library member.
 
 - **Endpoint:** `POST /members`
-- **Authorization:** Required (Admin only)
+- **Authorization:** UserOrAdmin policy required
 - **Request Body:**
 
 ```json
@@ -413,7 +437,7 @@ Creates a new library member.
 Updates an existing member.
 
 - **Endpoint:** `PUT /members/{id}`
-- **Authorization:** Required (Admin only)
+- **Authorization:** UserOrAdmin policy required
 - **Path Parameters:**
   - `id`: GUID - Member identifier
 - **Request Body:**
@@ -451,7 +475,7 @@ Deletes a library member.
 Creates a new borrowing record for multiple books.
 
 - **Endpoint:** `POST /borrowings`
-- **Authorization:** Required (Any authenticated user)
+- **Authorization:** UserOrAdmin policy required
 - **Request Body:**
 
 ```json
@@ -486,7 +510,7 @@ Deletes a borrowing record (returns books).
 Retrieves borrowing statistics for a date range.
 
 - **Endpoint:** `GET /borrowings/summary`
-- **Authorization:** Required (Any authenticated user)
+- **Authorization:** UserOrAdmin policy required
 - **Query Parameters:**
 
   - `startDate`: DateTime - Start of the date range
@@ -512,62 +536,6 @@ Retrieves borrowing statistics for a date range.
 
 ---
 
-### Authorization Requirements
-
-| Endpoint                      | Admin | User | Public |
-| ----------------------------- | ----- | ---- | ------ |
-| POST /authentication/register | -     | -    | ✓      |
-| POST /authentication/login    | -     | -    | ✓      |
-| GET /books                    | -     | -    | ✓      |
-| GET /books/{id}               | -     | -    | ✓      |
-| POST /books                   | ✓     | -    | -      |
-| PATCH /books/{id}             | ✓     | -    | -      |
-| DELETE /books/{id}            | ✓     | -    | -      |
-| POST /members                 | ✓     | -    | -      |
-| PUT /members/{id}             | ✓     | -    | -      |
-| DELETE /members/{id}          | ✓     | -    | -      |
-| POST /borrowings              | ✓     | ✓    | -      |
-| DELETE /borrowings/{id}       | ✓     | -    | -      |
-| GET /borrowings/summary       | ✓     | ✓    | -      |
-
----
-
-## Project Structure
-
-```
-MiniLibrary/
-├── MiniLibrary/              # Main project
-├── MiniLibrary.API/          # Web API layer (Minimal APIs)
-│   ├── Endpoints/            # API endpoints
-│   │   ├── Authentication/   # Login, Register
-│   │   ├── Books/           # CRUD operations for books
-│   │   ├── Members/         # CRUD operations for members
-│   │   └── Borrowings/      # Borrowing operations
-│   ├── Extensions/          # Service extensions
-│   └── Infrastructure/      # API infrastructure
-├── MiniLibrary.Application/ # Application logic & CQRS
-├── MiniLibrary.Domain/      # Domain entities and business rules
-├── MiniLibrary.Infrastructure/ # Data access and external services
-└── SharedKernel/            # Shared domain primitives
-
-```
-
----
-
-## Technologies Used
-
-- **.NET 9.0** - Application framework
-- **PostgreSQL** - Database
-- **Entity Framework Core 9.0** - ORM
-- **JWT Bearer Authentication** - Security
-- **Serilog** - Logging
-- **Swagger/OpenAPI** - API documentation
-- **Clean Architecture** - Project structure
-- **CQRS Pattern** - Command/Query separation
-- **Result Pattern** - Error handling
-
----
-
 ## Development Notes
 
 ### Logging
@@ -584,13 +552,3 @@ The API is configured with an "AllowAll" CORS policy for development. Update thi
 ### Swagger
 
 Swagger UI is available only in Development mode. Access it at `/swagger` when running locally.
-
----
-
-## License
-
-All Rights Reserved © 2025 Naimur Rahman
-
-## Support
-
-For issues and questions, please open an issue in the repository.
