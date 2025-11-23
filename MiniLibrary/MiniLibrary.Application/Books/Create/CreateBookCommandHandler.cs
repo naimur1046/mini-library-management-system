@@ -1,5 +1,6 @@
 using Domain.Books;
 using Microsoft.EntityFrameworkCore;
+using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.SharedKernel;
@@ -8,7 +9,8 @@ namespace MiniLibrary.Application.Books.Create;
 
 internal sealed class CreateBookCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<CreateBookCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
@@ -30,6 +32,8 @@ internal sealed class CreateBookCommandHandler(
             CopiesAvailable = command.CopiesAvailable,
             PublishedYear = command.PublishedYear,
             IsAvailable = command.CopiesAvailable > 0,
+            CreatedOnUtc = dateTimeProvider.UtcNow,
+            CreatedBy = userContext.Email,
             IsDeleted = false
         };
 

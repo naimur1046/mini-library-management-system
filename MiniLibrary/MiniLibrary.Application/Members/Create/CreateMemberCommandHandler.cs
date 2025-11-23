@@ -1,3 +1,4 @@
+using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,8 @@ namespace MiniLibrary.Application.Members.Create;
 
 internal sealed class CreateMemberCommandHandler(
     IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    IUserContext userContext)
     : ICommandHandler<CreateMemberCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateMemberCommand command, CancellationToken cancellationToken)
@@ -29,6 +31,7 @@ internal sealed class CreateMemberCommandHandler(
             JoinDate = command.JoinDate,
             IsActive = command.IsActive,
             CreatedOnUtc = dateTimeProvider.UtcNow,
+            CreatedBy = userContext.Email,
             IsDeleted = false
         };
 
