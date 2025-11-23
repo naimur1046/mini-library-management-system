@@ -2,6 +2,7 @@ using System.Reflection;
 using MiniLibrary.API.Extensions;
 using MiniLibrary.Application;
 using MiniLibrary.Infrastructure;
+using MiniLibrary.Infrastructure.Database;
 using Serilog;
 
 try
@@ -18,7 +19,10 @@ try
     builder.Services.AddInfrastructure(builder.Configuration);
     
     WebApplication app = builder.Build();
-    
+
+    // Initialize database (apply migrations and seed initial data)
+    await app.InitializeDatabaseAsync();
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwaggerWithUi();
