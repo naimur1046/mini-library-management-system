@@ -19,8 +19,7 @@ try
     builder.Services.AddInfrastructure(builder.Configuration);
     
     WebApplication app = builder.Build();
-
-    // Initialize database (apply migrations and seed initial data)
+    
     await app.InitializeDatabaseAsync();
 
     if (app.Environment.IsDevelopment())

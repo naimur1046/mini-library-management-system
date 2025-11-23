@@ -31,6 +31,11 @@ internal sealed class CreateBorrowingsCommandHandler(
         {
             return Result.Failure<Guid>(BorrowErrors.SomeBooksNotFound);
         }
+
+        if (books.Count > 5)
+        {
+            return Result.Failure<Guid>(BorrowErrors.LimitExitedBorrowing());
+        }
         
         foreach (var book in books)
         {

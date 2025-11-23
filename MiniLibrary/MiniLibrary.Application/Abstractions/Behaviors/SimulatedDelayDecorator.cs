@@ -12,7 +12,6 @@ internal static class SimulatedDelayDecorator
     {
         public async Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
         {
-            // Simulate processing delay of 2000ms
             await Task.Delay(2000, cancellationToken);
 
             return await innerHandler.Handle(command, cancellationToken);
@@ -26,7 +25,6 @@ internal static class SimulatedDelayDecorator
     {
         public async Task<Result> Handle(TCommand command, CancellationToken cancellationToken)
         {
-            // Simulate processing delay of 2000ms
             await Task.Delay(2000, cancellationToken);
 
             return await innerHandler.Handle(command, cancellationToken);
@@ -40,7 +38,6 @@ internal static class SimulatedDelayDecorator
     {
         public async Task<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken)
         {
-            // Simulate processing delay of 2000ms
             await Task.Delay(2000, cancellationToken);
 
             return await innerHandler.Handle(query, cancellationToken);

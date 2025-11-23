@@ -72,8 +72,7 @@ internal sealed class UpdateBookCommandHandler(
             }
             book.PublishedYear = command.PublishedYear.Value;
         }
-
-        // Audit
+        
         book.ModifiedOnUtc = dateTimeProvider.UtcNow;
         book.ModifiedBy = userContext.Email;
 

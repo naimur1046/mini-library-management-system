@@ -22,8 +22,7 @@ internal sealed class UpdateMemberCommandHandler(
         {
             return Result.Failure<Guid>(MemberErrors.NotFound(command.MemberId));
         }
-
-        // Email uniqueness check
+        
         if (!string.IsNullOrWhiteSpace(command.Email) && command.Email != member.Email)
         {
             bool emailExists = await context.Members
@@ -61,8 +60,7 @@ internal sealed class UpdateMemberCommandHandler(
         {
             member.IsActive = command.IsActive.Value;
         }
-
-        // Audit
+        
         member.ModifiedOnUtc = dateTimeProvider.UtcNow;
         member.ModifiedBy = userContext.Email;
 
