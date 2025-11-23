@@ -30,4 +30,8 @@ public static class BorrowErrors
     public static Error BookAlreadyReturned(Guid bookId) => Error.Conflict(
         "Borrow.BookAlreadyReturned",
         $"The book with Id '{bookId}' has already been returned.");
+    
+    public static Error LimitExitedBorrowing() => Error.Conflict(
+        "Borrow.LimitExceeded",
+        "The member has exceeded the maximum allowed number of active borrowings (5).");
 }
