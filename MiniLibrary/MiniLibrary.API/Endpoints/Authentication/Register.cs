@@ -43,11 +43,14 @@ internal sealed class Register : IEndpoint
                 onSuccess: id => Results.Created($"/api/v1/users/{id}", new RegisterResponse { Id = id }),
                 onFailure: CustomResults.Problem);
         })
+        .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithName("Register")
         .WithTags(Tags.Authentication)
         .WithOpenApi()
         .Produces<RegisterResponse>(StatusCodes.Status201Created)
         .ProducesValidationProblem()
-        .ProducesProblem(StatusCodes.Status409Conflict);
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .ProducesProblem(StatusCodes.Status401Unauthorized)
+        .ProducesProblem(StatusCodes.Status403Forbidden);
     }
 }
