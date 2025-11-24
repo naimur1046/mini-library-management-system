@@ -1,46 +1,121 @@
 # Mini Library Management System
 
-Library management system built with .NET 9.0, PostgreSQL, and Clean Architecture principles. This system provides comprehensive book management, member management, and borrowing tracking capabilities with JWT authentication.
+A production-ready library management system built with .NET 9.0, PostgreSQL, and Clean Architecture principles. Features comprehensive book management, member management, and borrowing tracking with JWT authentication, CQRS pattern, and advanced error handling.
 
 ## Table of Contents
 
-- [Features](#Features)
-- [Tech Stack](#Tech-Stack)
+- [Features](#features)
+- [Architecture & Design Patterns](#architecture--design-patterns)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Setup & Run Instructions](#setup--run-instructions)
 - [Sample Login Credentials](#sample-login-credentials)
 - [API Workflow Documentation](#api-workflow-documentation)
-- [Project Structure](#project-structure)
+- [Development Notes](#development-notes)
 
 ## Features
 
-- **Book Management**: CRUD operations with auto-status update (`Available` to `Not Available`)
-- **Member Management**: CRUD with unique email validation
+### Core Functionality
+- **Book Management**:
+  - Full CRUD operations with automatic availability status updates
+  - ISBN uniqueness validation
+  - Cursor-based pagination for efficient data browsing
+  - Advanced filtering by title, category, and ISBN
+- **Member Management**:
+  - Complete member lifecycle management
+  - Email uniqueness validation
+  - Soft delete support with audit trail
 - **Borrowing System**:
-  - Borrow multiple books in one transaction
-  - Enforce: max **5 active borrows** per member
-  - Enforce: **book availability** (`CopiesAvailable > 0`)
-  - Simulated **2-second processing delay** on borrow/return
-- **Reporting Endpoint**: Borrow summary by date range (total borrowed, returned, active records, most borrowed book)
-- **JWT Authentication**: Login with crediential
-- **Secure**: All endpoints (except login) require valid JWT token
-- **ExtraOperation**: Soft delete support
+  - Multi-book borrowing in a single transaction
+  - Maximum **5 active borrows** per member (enforced at business logic level)
+  - Real-time **book availability** checks (`CopiesAvailable > 0`)
+  - Automatic copy count management
+  - Book return functionality with availability restoration
+  - Borrowing summary and statistics by member
+  - **2-second simulated processing delay** for testing async operations
+
+### Security & Authentication
+- **JWT Authentication**: Token-based authentication with configurable expiration
+- **Role-Based Authorization**: Admin and User roles with policy-based access control
+- **Password Security**: BCrypt password hashing
+- **Secure Endpoints**: All endpoints (except login) require valid JWT tokens
+
+### Advanced Features
+- **Audit Trail**: Automatic tracking of CreatedBy, ModifiedBy, and DeletedBy with timestamps
+- **Soft Delete**: Logical deletion preserving data integrity and history
+- **Correlation IDs**: Request tracking with unique identifiers for debugging
+- **Result Pattern**: Railway-oriented programming for predictable error handling
+- **Domain Events**: Event-driven architecture foundation
+- **Auto-Seeding**: Default admin account creation on first run
+
+---
+
+## Architecture & Design Patterns
+
+This project demonstrates professional software architecture principles:
+
+### Clean Architecture (5 Layers)
+- **Presentation Layer** (`MiniLibrary.API`): Minimal APIs, endpoints, middleware
+- **Application Layer** (`MiniLibrary.Application`): Business logic, CQRS handlers, validators
+- **Domain Layer** (`MiniLibrary.Domain`): Entities, business rules, domain events
+- **Infrastructure Layer** (`MiniLibrary.Infrastructure`): Database, authentication, external services
+- **Shared Kernel** (`MiniLibrary.SharedKernel`): Cross-cutting abstractions (Result, Error, Entity base classes)
+
+### Design Patterns Implemented
+- **CQRS (Command Query Responsibility Segregation)**: Separate read and write operations for better scalability
+- **Decorator Pattern**: Cross-cutting concerns via behavior decorators
+  - `ValidationDecorator`: FluentValidation rules before execution
+  - `LoggingDecorator`: Structured logging with Serilog
+  - `SimulatedDelayDecorator`: 2-second delay for testing
+- **Result Pattern**: Type-safe error handling without exceptions
+- **Repository Pattern**: Data access abstraction via `IApplicationDbContext`
+- **Domain Events**: Event sourcing foundation for future features
+- **Dependency Injection**: Auto-registration via Scrutor with interface scanning
 
 ---
 
 ## Tech Stack
 
-## Technologies Used
+### Core Technologies
+- **.NET 9.0** - Modern application framework with Minimal APIs
+- **PostgreSQL** - Relational database with advanced features
+- **Entity Framework Core 9.0** - ORM with migrations and fluent configuration
+- **C# 13** - Latest language features
 
-- **.NET 9.0** - Application framework
-- **PostgreSQL** - Database
-- **Entity Framework Core 9.0** - ORM
-- **JWT Bearer Authentication** - Security
-- **Serilog** - Logging
-- **Swagger/OpenAPI** - API documentation
-- **Clean Architecture** - Project structure
-- **CQRS Pattern** - Command/Query separation
-- **Result Pattern** - Error handling
+### Security & Authentication
+- **JWT Bearer Authentication** - Stateless token-based auth
+- **BCrypt.Net-Next** - Secure password hashing
+
+### Logging & Monitoring
+- **Serilog 4.3.0** - Structured logging framework
+- **Console + File Sinks** - Real-time and persistent logging
+- **Correlation IDs** - Request tracking across log entries
+
+### API & Documentation
+- **Swagger/OpenAPI** - Interactive API documentation
+- **Minimal APIs** - Lightweight endpoint definitions
+- **Problem Details** - RFC 7807 standard error responses
+
+### Development Tools
+- **FluentValidation 12.1.0** - Declarative validation rules
+- **Scrutor 6.1.0** - Assembly scanning and auto-registration
+- **EF Core Tools** - Database migrations and scaffolding
+- **Health Checks** - Application health monitoring
+
+---
+
+### Key Directories Explained
+
+**Endpoints/** - Minimal API endpoints organized by feature (Authentication, Books, Members, Borrowings)
+
+**Application/Behaviors/** - Decorator pattern implementations for cross-cutting concerns (validation, logging, delay)
+
+**Domain/Entities/** - Business entities with rich domain logic and error definitions
+
+**Infrastructure/Database/** - EF Core DbContext, migrations, configurations, and seeding logic
+
+**SharedKernel/** - Reusable abstractions shared across projects (Result pattern, base classes)
 
 ---
 
@@ -202,10 +277,10 @@ https://localhost:5001
 
 #### 1. Register User
 
-Creates a new user account.
+Creates a new user account. Only administrators can register new users.
 
 - **Endpoint:** `POST /authentication/register`
-- **Authorization:** None
+- **Authorization:** AdminOnly (requires valid Admin JWT token)
 - **Request Body:**
 
 ```json
@@ -352,9 +427,9 @@ Creates a new book in the library.
 
 #### 4. Update Book
 
-Updates an existing book with partial update support. Only the fields provided in the request body will be updated.
+Updates an existing book. All fields should be provided in the request body.
 
-- **Endpoint:** `PATCH /books/{id}`
+- **Endpoint:** `PUT /books/{id}`
 - **Authorization:** UserOrAdmin policy required
 - **Path Parameters:**
   | Parameter | Type | Description |
@@ -362,14 +437,13 @@ Updates an existing book with partial update support. Only the fields provided i
   | `id` | GUID | Unique identifier of the book |
 
 - **Request Body:**
-  All fields are optional. Only the provided fields will be updated.
 
 ```json
 {
-  "title": "string (optional)",
-  "author": "string (optional)",
-  "isbn": "string (optional)",
-  "category": "string (optional)",
+  "title": "string",
+  "author": "string",
+  "isbn": "string",
+  "category": "string",
   "copiesAvailable": 0,
   "publishedYear": 0
 }
@@ -406,7 +480,65 @@ The book is not permanently removed — instead
 
 ### Members Endpoints
 
-#### 1. Create Member
+#### 1. Get All Members
+
+Retrieves a paginated list of all library members.
+
+- **Endpoint:** `GET /members`
+- **Authorization:** UserOrAdmin policy required
+- **Query Parameters:**
+
+| Name   | Type  | Required | Description                           |
+| ------ | ----- | -------- | ------------------------------------- |
+| `page` | `int` | No       | Page number. Default: 1.              |
+| `size` | `int` | No       | Page size. Default: 10. Max: 100.     |
+
+- **Response:** `200 OK`
+
+```json
+{
+  "members": [
+    {
+      "id": "guid",
+      "fullName": "string",
+      "email": "string",
+      "phone": "string",
+      "joinDate": "2025-01-01T00:00:00Z",
+      "isActive": true
+    }
+  ],
+  "totalCount": 0,
+  "page": 1,
+  "pageSize": 10
+}
+```
+
+#### 2. Get Member by ID
+
+Retrieves a specific member by their ID.
+
+- **Endpoint:** `GET /members/{id}`
+- **Authorization:** UserOrAdmin policy required
+- **Path Parameters:**
+
+| Name | Type   | Required | Description                          |
+| ---- | ------ | -------- | ------------------------------------ |
+| `id` | `GUID` | Yes      | The unique identifier of the member. |
+
+- **Response:** `200 OK`
+
+```json
+{
+  "id": "guid",
+  "fullName": "string",
+  "email": "string",
+  "phone": "string",
+  "joinDate": "2025-01-01T00:00:00Z",
+  "isActive": true
+}
+```
+
+#### 3. Create Member
 
 Creates a new library member.
 
@@ -432,14 +564,18 @@ Creates a new library member.
 }
 ```
 
-#### 2. Update Member
+#### 4. Update Member
 
 Updates an existing member.
 
 - **Endpoint:** `PUT /members/{id}`
 - **Authorization:** UserOrAdmin policy required
 - **Path Parameters:**
-  - `id`: GUID - Member identifier
+
+| Name | Type   | Required | Description           |
+| ---- | ------ | -------- | --------------------- |
+| `id` | `GUID` | Yes      | Member identifier     |
+
 - **Request Body:**
 
 ```json
@@ -454,15 +590,17 @@ Updates an existing member.
 
 - **Response:** `204 No Content`
 
-#### 3. Delete Member
+#### 5. Delete Member
 
-Deletes a library member.
+Soft-deletes a library member. The member is not permanently removed - instead, `IsDeleted` is set to `true`.
 
 - **Endpoint:** `DELETE /members/{id}`
-- **Authorization:** Required (Admin only)
+- **Authorization:** AdminOnly (requires Admin role)
 - **Path Parameters:**
 
-  - `id`: GUID - Member identifier
+| Name | Type   | Required | Description       |
+| ---- | ------ | -------- | ----------------- |
+| `id` | `GUID` | Yes      | Member identifier |
 
 - **Response:** `204 No Content`
 
@@ -493,42 +631,57 @@ Creates a new borrowing record for multiple books.
 "guid"
 ```
 
-#### 2. Delete Borrowing
+#### 2. Return Book
 
-Deletes a borrowing record (returns books).
+Returns a borrowed book and updates its availability status.
 
-- **Endpoint:** `DELETE /borrowings/{id}`
-- **Authorization:** Required (Admin only)
+- **Endpoint:** `POST /borrowings/{borrowId}/return/{bookId}`
+- **Authorization:** UserOrAdmin policy required
 - **Path Parameters:**
 
-  - `id`: GUID - Borrowing identifier
-
-- **Response:** `204 No Content`
-
-#### 3. Get Borrowing Summary
-
-Retrieves borrowing statistics for a date range.
-
-- **Endpoint:** `GET /borrowings/summary`
-- **Authorization:** UserOrAdmin policy required
-- **Query Parameters:**
-
-  - `startDate`: DateTime - Start of the date range
-  - `endDate`: DateTime - End of the date range
+| Name       | Type   | Required | Description                         |
+| ---------- | ------ | -------- | ----------------------------------- |
+| `borrowId` | `GUID` | Yes      | The unique identifier of the borrow |
+| `bookId`   | `GUID` | Yes      | The unique identifier of the book   |
 
 - **Response:** `200 OK`
 
 ```json
 {
+  "id": "guid",
+  "message": "Book returned successfully"
+}
+```
+
+#### 3. Get Borrowing Summary
+
+Retrieves borrowing statistics and details for a specific member.
+
+- **Endpoint:** `GET /borrowings/summary`
+- **Authorization:** UserOrAdmin policy required
+- **Query Parameters:**
+
+| Name       | Type   | Required | Description                                         |
+| ---------- | ------ | -------- | --------------------------------------------------- |
+| `memberId` | `GUID` | Yes      | The unique identifier of the member to get summary for |
+
+- **Response:** `200 OK`
+
+```json
+{
+  "memberId": "guid",
+  "memberName": "string",
   "totalBorrowings": 0,
   "activeBorrowings": 0,
-  "overdueBorrowings": 0,
   "returnedBorrowings": 0,
-  "mostBorrowedBooks": [
+  "borrowingHistory": [
     {
+      "borrowId": "guid",
       "bookId": "guid",
-      "title": "string",
-      "borrowCount": 0
+      "bookTitle": "string",
+      "borrowDate": "2025-01-01T00:00:00Z",
+      "dueDate": "2025-01-15T00:00:00Z",
+      "returnDate": "2025-01-10T00:00:00Z"
     }
   ]
 }
@@ -540,15 +693,68 @@ Retrieves borrowing statistics for a date range.
 
 ### Logging
 
-Logs are written to:
+The application uses Serilog for structured logging with the following features:
 
-- Console (real-time)
-- File system: `__logs/log-{Date}.txt`
+- **Console Sink**: Real-time log output during development
+- **File Sink**: Daily rolling logs stored in `__logs/log-{Date}.txt`
+- **Correlation IDs**: Each HTTP request gets a unique identifier for tracking across log entries
+- **Request Logging**: Automatic logging of all HTTP requests with method, path, status code, and duration
+- **Structured Data**: Logs include structured context (user ID, email, request path)
 
-### CORS
+Log levels: Information (default), Warning, Error, Fatal
 
-The API is configured with an "AllowAll" CORS policy for development. Update this for production use.
+### Behavior Decorators
 
-### Swagger
+The application uses the decorator pattern to add cross-cutting concerns to all command and query handlers:
 
-Swagger UI is available only in Development mode. Access it at `/swagger` when running locally.
+1. **ValidationDecorator** - Validates all commands/queries using FluentValidation before execution
+2. **LoggingDecorator** - Logs the start and completion of all operations with execution time
+3. **SimulatedDelayDecorator** - Adds a 2-second delay to all operations (for testing async UI behavior)
+
+These decorators are automatically applied to all handlers via Scrutor's `TryDecorate` method.
+
+### CQRS Pattern
+
+The application separates read and write operations:
+
+- **Commands**: Modify state (Create, Update, Delete) - return `Result<T>` or `Result`
+- **Queries**: Read data (Get, GetById, GetSummary) - return `Result<TResponse>`
+
+Each operation has its own:
+- Request DTO (Command/Query)
+- Handler (implements `ICommandHandler<T>` or `IQueryHandler<T, TResponse>`)
+- Validator (FluentValidation rules)
+
+### Result Pattern
+
+All operations return `Result<T>` instead of throwing exceptions:
+
+```csharp
+// Success
+Result<Book> result = Result.Success(book);
+
+// Failure
+Result<Book> result = Result.Failure<Book>(BookErrors.NotFound);
+```
+
+Error handling is explicit and type-safe. Errors include:
+- `Code`: Error identifier
+- `Description`: Human-readable message
+- `Type`: Error category (NotFound, Validation, Conflict, etc.)
+
+### Database
+
+**Migrations**: EF Core Code-First migrations track schema changes
+- Run `dotnet ef database update` to apply migrations
+- Run `dotnet ef migrations add <name>` to create new migrations
+
+**Seeding**: Automatic admin user creation on first startup
+- Email: admin@minilibrary.com
+- Password: Admin@123
+- Role: Admin
+
+**Soft Delete**: Entities implementing `ISoftDeletableEntity` are never physically deleted
+- Query filters automatically exclude deleted entities
+- Audit trail preserved for compliance
+
+**Async/Await**: All database operations use async methods to avoid thread blocking
