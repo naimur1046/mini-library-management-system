@@ -1,7 +1,7 @@
-using Domain.Books;
-using Domain.Borrows;
-using Domain.Members;
-using Domain.Users;
+using MiniLibrary.Domain.Books;
+using MiniLibrary.Domain.Borrows;
+using MiniLibrary.Domain.Members;
+using MiniLibrary.Domain.Users;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Infrastructure.DomainEvents;
 using MiniLibrary.SharedKernel;

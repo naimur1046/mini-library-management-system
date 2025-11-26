@@ -1,4 +1,4 @@
-using Domain.Borrows;
+using MiniLibrary.Domain.Borrows;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

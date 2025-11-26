@@ -1,4 +1,4 @@
-using Domain.Members;
+using MiniLibrary.Domain.Members;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

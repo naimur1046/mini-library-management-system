@@ -1,4 +1,4 @@
-using Domain.Users;
+using MiniLibrary.Domain.Users;
 
 namespace MiniLibrary.Application.Abstractions.Authentication;
 

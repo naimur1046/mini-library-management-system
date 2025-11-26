@@ -1,6 +1,6 @@
 using MiniLibrary.SharedKernel;
 
-namespace Domain.Books;
+namespace MiniLibrary.Domain.Books;
 
 public static class BookErrors
 {

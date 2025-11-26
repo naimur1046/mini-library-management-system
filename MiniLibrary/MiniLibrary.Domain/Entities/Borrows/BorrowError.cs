@@ -1,6 +1,6 @@
 using MiniLibrary.SharedKernel;
 
-namespace Domain.Borrows;
+namespace MiniLibrary.Domain.Borrows;
 
 public static class BorrowErrors
 {

@@ -1,4 +1,4 @@
-using Domain.Books;
+using MiniLibrary.Domain.Books;
 using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Data;
 using MiniLibrary.Application.Abstractions.Messaging;
@@ -7,8 +7,7 @@ using MiniLibrary.SharedKernel;
 namespace MiniLibrary.Application.Books.Delete;
 
 internal sealed class DeleteBookCommandHandler(
-    IApplicationDbContext context,
-    IDateTimeProvider dateTimeProvider)
+    IApplicationDbContext context)
     : ICommandHandler<DeleteBookCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(DeleteBookCommand command, CancellationToken cancellationToken)

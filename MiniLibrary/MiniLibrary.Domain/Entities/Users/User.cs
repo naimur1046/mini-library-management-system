@@ -1,6 +1,6 @@
 using MiniLibrary.SharedKernel;
 
-namespace Domain.Users;
+namespace MiniLibrary.Domain.Users;
 
 public sealed class User : Entity, IAuditableEntity, ISoftDeletableEntity
 {

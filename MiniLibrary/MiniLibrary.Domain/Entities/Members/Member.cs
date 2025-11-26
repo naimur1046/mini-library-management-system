@@ -1,6 +1,6 @@
 using MiniLibrary.SharedKernel;
 
-namespace Domain.Members;
+namespace MiniLibrary.Domain.Members;
 
 public sealed class Member : Entity, IAuditableEntity, ISoftDeletableEntity
 {

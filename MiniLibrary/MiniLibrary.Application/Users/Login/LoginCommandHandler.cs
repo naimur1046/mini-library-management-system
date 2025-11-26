@@ -1,4 +1,4 @@
-using Domain.Users;
+using MiniLibrary.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;
