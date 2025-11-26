@@ -1,4 +1,4 @@
-namespace Domain.Users;
+namespace MiniLibrary.Domain.Users;
 
 public enum Role
 {

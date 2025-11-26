@@ -1,4 +1,4 @@
-using Domain.Borrows;
+using MiniLibrary.Domain.Borrows;
 using Microsoft.EntityFrameworkCore;
 using MiniLibrary.Application.Abstractions.Authentication;
 using MiniLibrary.Application.Abstractions.Data;

@@ -1,7 +1,7 @@
 using MiniLibrary.SharedKernel;
-using Domain.Members;
+using MiniLibrary.Domain.Members;
 
-namespace Domain.Borrows;
+namespace MiniLibrary.Domain.Borrows;
 
 public sealed class Borrow : Entity, IAuditableEntity
 {

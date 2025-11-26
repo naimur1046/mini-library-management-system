@@ -1,4 +1,4 @@
-using Domain.Books;
+using MiniLibrary.Domain.Books;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

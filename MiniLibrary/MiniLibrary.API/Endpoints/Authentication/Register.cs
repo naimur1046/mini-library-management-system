@@ -1,4 +1,4 @@
-using Domain.Users;
+using MiniLibrary.Domain.Users;
 using MiniLibrary.Application.Abstractions.Messaging;
 using MiniLibrary.Application.Users.Register;
 using MiniLibrary.API.Extensions;
